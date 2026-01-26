@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>Institution Dashboard</h2>
+            <p class="text-muted">Manage and monitor your institution</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'admin:index' %}" class="btn btn-primary">Admin Panel</a>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-success">
+                <div class="card-body">
+                    <h6 class="card-title text-success">Total Students</h6>
+                    <h3>{{ total_students|default:"0" }}</h3>
+                    <small class="text-muted">Active Students</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-info">
+                <div class="card-body">
+                    <h6 class="card-title text-info">Total Teachers</h6>
+                    <h3>{{ total_teachers|default:"0" }}</h3>
+                    <small class="text-muted">Faculty Members</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-warning">
+                <div class="card-body">
+                    <h6 class="card-title text-warning">Total Courses</h6>
+                    <h3>{{ total_courses|default:"0" }}</h3>
+                    <small class="text-muted">Offered Courses</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-danger">
+                <div class="card-body">
+                    <h6 class="card-title text-danger">Pending Tasks</h6>
+                    <h3>{{ pending_tasks|default:"0" }}</h3>
+                    <small class="text-muted">Awaiting Action</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Sections -->
+    <div class="row">
+        <!-- Institution Information -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Institution Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Institution Name:</strong>
+                        <p>{{ institution.name|default:"Not Set" }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Address:</strong>
+                        <p>{{ institution.address|default:"Not Set" }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Phone:</strong>
+                        <p>{{ institution.phone|default:"Not Set" }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Email:</strong>
+                        <p>{{ institution.email|default:"Not Set" }}</p>
+                    </div>
+                    <a href="#" class="btn btn-warning btn-sm">Edit Information</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action">
+                            ➕ Add New Student
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            ➕ Add New Teacher
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            📅 Create New Course
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            📊 View Reports
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            ⚙️ Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Recent Activities</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_activities %}
+                    <ul class="list-group list-group-flush">
+                        {% for activity in recent_activities %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <strong>{{ activity.title }}</strong>
+                                    <p class="text-muted mb-0">{{ activity.description }}</p>
+                                </div>
+                                <small class="text-muted">{{ activity.date }}</small>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted">No recent activities</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timetable Overview -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Weekly Timetable</h5>
+                </div>
+                <div class="card-body">
+                    {% if timetable %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Monday</th>
+                                    <th>Tuesday</th>
+                                    <th>Wednesday</th>
+                                    <th>Thursday</th>
+                                    <th>Friday</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for slot in timetable %}
+                                <tr>
+                                    <td><strong>{{ slot.time }}</strong></td>
+                                    <td>{{ slot.monday|default:"-" }}</td>
+                                    <td>{{ slot.tuesday|default:"-" }}</td>
+                                    <td>{{ slot.wednesday|default:"-" }}</td>
+                                    <td>{{ slot.thursday|default:"-" }}</td>
+                                    <td>{{ slot.friday|default:"-" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No timetable available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}

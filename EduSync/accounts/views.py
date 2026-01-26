@@ -73,7 +73,7 @@ def signup_view(request):
             login(request, user)
             
             # Render with success message and redirect
-            return render(request, 'signup.html', {'success': '✅ Sign up successfully! Redirecting to dashboard...', 'redirect': 'login'})
+            return render(request, 'signup.html', {'success': '✅ Sign up successfully! Redirecting to login...', 'redirect': 'login'})
         except Exception as e:
             return render(request, 'signup.html', {'error': f'❌ Error creating account: {str(e)}'})
     
