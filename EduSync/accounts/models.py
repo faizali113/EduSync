@@ -15,12 +15,12 @@ class SignupTable(models.Model):
 class LoginTable(models.Model):
     """Stores login credentials"""
     signup = models.OneToOneField(SignupTable, on_delete=models.CASCADE)
-    username = models.CharField(max_length=100, unique=True)
+    institution_name = models.CharField(max_length=200, unique=True, null=True, blank=True)
     password = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return self.username
+        return self.institution_name
 
 class UserProfile(models.Model):
     ROLE_CHOICES = [

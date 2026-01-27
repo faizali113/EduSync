@@ -8,8 +8,8 @@ class SignupTableAdmin(admin.ModelAdmin):
 
 @admin.register(LoginTable)
 class LoginTableAdmin(admin.ModelAdmin):
-    list_display = ('username', 'signup', 'created_at')
-    search_fields = ('username',)
+    list_display = ('institution_name', 'signup', 'created_at')
+    search_fields = ('institution_name',)
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
