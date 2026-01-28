@@ -1,0 +1,43 @@
+{% extends "base.html "%}
+{% load static %}
+{% block content %}
+        <h3 class="text-center mt-3 mb-3">Institution Admin Dashboard</h3>
+        <p class="text-center mb-4">Manage your institution's settings and data here.</p>
+<div class="container mt-5">
+  <div class="row g-4 h-100">
+    <div class="col-md-5">
+    <div class="card mt-4 mb-4" style="border-radius: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <div class="card-body">
+            <h5 class="card-title">Institution News</h5>
+            <p class="card-text">Manage news from here.</p>
+            <a href="#" class="btn btn-primary">Add News</a>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4" style="border-radius: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"> 
+        <div class="card-body">
+            <h5 class="card-title">Add Teacher</h5>
+            <p class="card-text">Manage teachers from here.</p>
+            <a href="#" class="btn btn-primary">Add teacher</a>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4" style="border-radius: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <div class="card-body">
+            <h5 class="card-title">Institution Students</h5>
+            <p class="card-text">Manage students from here.</p>
+            <a href="#" class="btn btn-primary">Add Students</a>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4" style="border-radius: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <div class="card-body">
+            <h5 class="card-title">ChatBot</h5>
+            <p class="card-text">Inform teachers & students from here.</p>
+            <a href="#" class="btn btn-primary">Go to Chatbot</a>
+        </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}      
