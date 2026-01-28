@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 {% endif %}
 
                 <span class="fw-semibold">
-                    {{ user.first_name|default:user.username }}
+                    {{ user.first_name|default:user.institution.name }}
                 </span>
 
                 <button id="themeToggle" class="btn btn-secondary btn-sm">🌙</button>
