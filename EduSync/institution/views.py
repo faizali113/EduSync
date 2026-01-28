@@ -2,8 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Institution
 
+from .models import Institution, News
+
+
+# 🔹 INSTITUTION DASHBOARD (WELCOME PAGE)
 @login_required(login_url='login')
 def dashboard_view(request):
     try:
@@ -11,14 +14,19 @@ def dashboard_view(request):
     except Institution.DoesNotExist:
         institution = None
 
+    news_list = News.objects.order_by("-created_at")
+
     context = {
         'institution': institution,
         'user': request.user,
-        'show_dashboard_nav': True,  # DASHBOARD NAVBAR
+        'news_list': news_list,          # ✅ NEWS PASSED HERE
+        'show_dashboard_nav': True,
     }
+
     return render(request, 'institution/dashboard.html', context)
 
 
+# 🔹 INSTITUTION ADMIN LOGIN
 def institution_admin_login(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -30,25 +38,59 @@ def institution_admin_login(request):
             messages.error(request, "❌ Username or password is wrong")
             return redirect('institution_admin_login')
 
-        # role check
         if user.userprofile.role != 'institution_admin':
             messages.error(request, "❌ You are not an institution admin")
             return redirect('institution_admin_login')
 
         login(request, user)
-
         return redirect('institution_admin_dashboard')
 
-    context = {
-        'show_dashboard_nav': True  # Show dashboard navbar even on login page
-    }
+    return render(
+        request,
+        'institution/admin_login.html',
+        {'show_dashboard_nav': True}
+    )
 
-    return render(request, 'institution/admin_login.html', context)
 
-
+# 🔹 INSTITUTION ADMIN DASHBOARD (ADD + SHOW NEWS)
 @login_required(login_url='institution_admin_login')
 def institution_admin_dashboard(request):
-    context = {
-        'show_dashboard_nav': True
-    }
-    return render(request, 'institution/admin_dashboard.html', context)
+    edit_news = None
+
+    # EDIT MODE
+    edit_id = request.GET.get("edit")
+    if edit_id:
+        edit_news = News.objects.filter(id=edit_id).first()
+
+    # CREATE / UPDATE
+    if request.method == "POST":
+        news_text = request.POST.get("news")
+        news_id = request.POST.get("news_id")
+
+        if news_text:
+            if news_id:
+                # UPDATE
+                news = News.objects.get(id=news_id)
+                news.content = news_text
+                news.save()
+            else:
+                # CREATE
+                News.objects.create(content=news_text)
+
+        return redirect("institution_admin_dashboard")
+
+    news_list = News.objects.order_by("-created_at")
+
+    return render(
+        request,
+        "institution/admin_dashboard.html",
+        {
+            "news_list": news_list,
+            "edit_news": edit_news
+        }
+    )
+
+@login_required
+def delete_news(request, news_id):
+    News.objects.filter(id=news_id).delete()
+    return redirect('institution_admin_dashboard')

@@ -1,89 +1,3 @@
-{% comment %} <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>EduSync</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% load static %}
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
-
-<body data-bs-theme="light">
-
-<nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
-    <div class="container">
-
-        <a class="navbar-brand fw-bold" href="/">EduSync</a>
-
-        <div class="d-flex align-items-center gap-3">
-
-            {% if user.is_authenticated and request.resolver_match.url_name == 'dashboard' %}
-
-                <!-- DASHBOARD NAVBAR -->
-                {% if user.userprofile.profile_pic %}
-                    <img src="{{ user.userprofile.profile_pic.url }}"
-                         width="40" height="40"
-                         class="rounded-circle border">
-                {% else %}
-                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                         width="40" height="40"
-                         class="rounded-circle border">
-                {% endif %}
-
-                <span class="fw-semibold">
-                    {{ user.first_name|default:user.username }}
-                </span>
-
-                <button id="themeToggle" class="btn btn-secondary btn-sm">🌙</button>
-
-                <form action="{% url 'logout' %}" method="post" class="m-0">
-                    {% csrf_token %}
-                    <button class="btn btn-danger btn-sm">Logout</button>
-                </form>
-
-            {% else %}
-
-                <!-- PUBLIC NAVBAR -->
-                <a href="{% url 'login' %}" class="btn btn-success btn-sm">Institute Login</a>
-                <a href="{% url 'signup' %}" class="btn btn-warning btn-sm">Get Started</a>
-                <button id="themeToggle" class="btn btn-secondary btn-sm">🌙</button>
-
-            {% endif %}
-
-        </div>
-    </div>
-</nav>
-
-{% block content %}{% endblock %}
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const btn = document.getElementById("themeToggle");
-    if (!btn) return;
-
-    const theme = localStorage.getItem("theme") || "light";
-    document.body.setAttribute("data-bs-theme", theme);
-    btn.innerText = theme === "dark" ? "☀️ Light" : "🌙 Dark";
-
-    btn.onclick = () => {
-        const newTheme =
-            document.body.getAttribute("data-bs-theme") === "dark"
-            ? "light" : "dark";
-
-        document.body.setAttribute("data-bs-theme", newTheme);
-        localStorage.setItem("theme", newTheme);
-        btn.innerText = newTheme === "dark" ? "☀️ Light" : "🌙 Dark";
-    };
-});
-</script>
-
-</body>
-</html> {% endcomment %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <div class="d-flex align-items-center gap-3">
 
-            {% if user.is_authenticated and show_dashboard_nav %}
+            {% if user.is_authenticated and show_dashboard_nav|default:False %}
 
                 <!-- DASHBOARD NAVBAR -->
                 {% if user.userprofile.profile_pic %}

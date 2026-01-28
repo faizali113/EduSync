@@ -1,24 +1,192 @@
-{% extends "base.html "%}
+{% extends "base.html" %}
+{% block content %}
+
+{% if news_list %}
+<div class="container-fluid bg-dark text-white py-2 mb-4">
+    <marquee direction="left" scrollamount="6">
+        {% for n in news_list %}
+            🔔 {{ n.content }} &nbsp;&nbsp;&nbsp;
+        {% endfor %}
+    </marquee>
+</div>
+{% endif %}
+
+<h3 class="text-center mt-3 mb-3">Institution Admin Dashboard</h3>
+<p class="text-center mb-4">Manage your institution's settings and data here.</p>
+
+<div class="container mt-5">
+    <div class="row g-4">
+<div class="container">
+  <div class="row g-4">
+
+    <!-- ADD / EDIT NEWS -->
+    <div class="col-md-5">
+      <div class="card shadow">
+        <div class="card-body">
+
+          <h5>{% if edit_news %}Edit News{% else %}Add News{% endif %}</h5>
+
+          <form method="post">
+            {% csrf_token %}
+
+            {% if edit_news %}
+              <input type="hidden" name="news_id" value="{{ edit_news.id }}">
+            {% endif %}
+
+            <textarea name="news"
+                      class="form-control mb-2"
+                      rows="4"
+                      required>{{ edit_news.content|default_if_none:"" }}</textarea>
+
+            <button class="btn btn-success">
+              {% if edit_news %}Update{% else %}Publish{% endif %}
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- NEWS LIST -->
+    <div class="col-md-7">
+      <div class="card shadow">
+        <div class="card-body">
+
+          <h5>Published News</h5>
+
+          {% for n in news_list %}
+          <div class="d-flex justify-content-between align-items-center border p-2 mb-2">
+            <span>{{ n.content }}</span>
+
+            <div>
+              <a href="?edit={{ n.id }}" class="btn btn-sm btn-warning">Edit</a>
+              <a href="{% url 'delete_news' n.id %}" class="btn btn-sm btn-danger">Delete</a>
+            </div>
+          </div>
+          {% endfor %}
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+        <!-- NEWS CARD -->
+        {% comment %} <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Institution News</h5>
+
+                    <button class="btn btn-outline-primary mb-3"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#newsForm">
+                        Add News
+                    </button>
+
+                    <div class="collapse" id="newsForm">
+                        <form method="post">
+                            {% csrf_token %}
+                            <textarea name="news"
+                                      class="form-control mb-2"
+                                      rows="3"
+                                      placeholder="Enter news here..."></textarea>
+                            <button type="submit" class="btn btn-success">
+                                Publish News
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> {% endcomment %}
+
+        <!-- OTHER CARDS -->
+        <div class="col-md-5">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h5>Add Teacher</h5>
+                    <a href="#" class="btn btn-outline-primary">Add Teacher</a>
+                </div>
+            </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h5>Institution Students</h5>
+                    <a href="#" class="btn btn-outline-primary">Add Students</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% comment %} {% extends "base.html"%}
 {% load static %}
 {% block content %}
-        <h3 class="text-center mt-3 mb-3">Institution Admin Dashboard</h3>
-        <p class="text-center mb-4">Manage your institution's settings and data here.</p>
+
+<h3 class="text-center mt-3 mb-3">Institution Admin Dashboard</h3>
+<p class="text-center mb-4">Manage your institution's settings and data here.</p>
+
+
 <div class="container mt-5">
-  <div class="row g-4 h-100">
-    <div class="col-md-5">
-    <div class="card mt-4 mb-4" style="border-radius: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <div class="row g-4 h-100">
+        <div class="col-md-5">
+        {% if news_list %}
+    <div class="container-fluid bg-dark text-white py-2 mb-4">
+    <marquee direction="left" scrollamount="6">
+        {% for n in news_list %}
+        🔔 {{ n.content }} &nbsp;&nbsp;&nbsp;
+        {% endfor %}
+    </marquee>
+</div>
+    {% endif %}
+
+
+
+<div class="container mt-5">
+  <div class="row g-4"> {% endcomment %}
+
+    <!-- NEWS CARD -->
+    {% comment %} <div class="col-md-5">
+      <div class="card shadow">
         <div class="card-body">
-            <h5 class="card-title">Institution News</h5>
-            <p class="card-text">Manage news from here.</p>
-            <a href="#" class="btn btn-primary">Add News</a>
+
+          <h5 class="card-title">Institution News</h5>
+
+          <!-- Toggle Button -->
+          <button class="btn btn-outline-primary mb-3"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#newsForm">
+            Add News
+          </button> {% endcomment %}
+
+          <!-- COLLAPSIBLE FORM -->
+          {% comment %} <div class="collapse" id="newsForm">
+            <form method="post">
+              {% csrf_token %}
+              <textarea name="news"
+                        class="form-control mb-2"
+                        rows="3"
+                        placeholder="Enter news here..."></textarea>
+              <button type="submit" class="btn btn-success">
+                Publish News
+              </button>
+            </form>
+          </div>
+
         </div>
+      </div>
     </div>
+
+  </div>
+</div>
 
     <div class="card mt-4 mb-4" style="border-radius: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"> 
         <div class="card-body">
             <h5 class="card-title">Add Teacher</h5>
             <p class="card-text">Manage teachers from here.</p>
-            <a href="#" class="btn btn-primary">Add teacher</a>
+            <a href="#" class="btn btn-outline-primary">Add teacher</a>
         </div>
     </div>
 
@@ -26,7 +194,7 @@
         <div class="card-body">
             <h5 class="card-title">Institution Students</h5>
             <p class="card-text">Manage students from here.</p>
-            <a href="#" class="btn btn-primary">Add Students</a>
+            <a href="#" class="btn btn-outline-primary">Add Students</a>
         </div>
     </div>
 
@@ -34,10 +202,12 @@
         <div class="card-body">
             <h5 class="card-title">ChatBot</h5>
             <p class="card-text">Inform teachers & students from here.</p>
-            <a href="#" class="btn btn-primary">Go to Chatbot</a>
+            <a href="#" class="btn btn-outline-primary">Go to Chatbot</a>
         </div>
     </div>
 
   </div>
 </div>
-{% endblock %}      
+{% endblock %}       {% endcomment %}
+
+

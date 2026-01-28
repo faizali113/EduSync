@@ -1,14 +1,77 @@
 {% extends 'base.html' %}
+{% block content %}
+
+{% if news_list %}
+<div class="container-fluid bg-dark text-white py-2 mb-4">
+    <marquee direction="left" scrollamount="6">
+        {% for n in news_list %}
+            🔔 {{ n.content }} &nbsp;&nbsp;&nbsp;
+        {% endfor %}
+    </marquee>
+</div>
+{% endif %}
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Welcome, {{ institution.name }}</h1>
+
+    <div class="row">
+        <!-- Admin Panel -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-cogs fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Admin Panel</h5>
+                    <p class="card-text">Manage institution settings.</p>
+                    <a href="{% url 'institution_admin_login' %}" class="btn btn-primary">
+                        Go to Admin Panel
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Panel -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-graduate fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Student Panel</h5>
+                    <p class="card-text">Manage students.</p>
+                    <a href="{% url 'student_dashboard' %}" class="btn btn-success">
+                        Go to Student Panel
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher Panel -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-chalkboard-teacher fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title">Teacher Panel</h5>
+                    <p class="card-text">Manage teachers.</p>
+                    <a href="#" class="btn btn-warning">Go to Teacher Panel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% comment %} {% extends 'base.html' %}
 
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<div class="container mt-4">
+<div class="container mt-4"> {% endcomment %}
     {% comment %} <h2 class="mb-4">Institution Dashboard</h2> {% endcomment %}
-    <h1 class="text-center mb-4">Welcome, {{ institution.name }} </h1>
+    {% comment %} <h1 class="text-center mb-4">Welcome, {{ institution.name }} </h1>
 
-    <div class="row">
+    
+
+    <div class="row"> {% endcomment %}
         <!-- Admin Panel Card -->
-        <div class="col-md-4 mb-4">
+        {% comment %} <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
                     <i class="fas fa-cogs fa-3x text-primary mb-3"></i>
@@ -19,10 +82,10 @@
                     </a>
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
 
         <!-- Student Panel Card -->
-        <div class="col-md-4 mb-4">
+        {% comment %} <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
                     <i class="fas fa-user-graduate fa-3x text-success mb-3"></i>
@@ -31,10 +94,10 @@
                     <a href="{% url 'student_dashboard' %}" class="btn btn-success">Go to Student Panel</a>
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
 
         <!-- Teacher Panel Card -->
-        <div class="col-md-4 mb-4">
+        {% comment %} <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
                     <i class="fas fa-chalkboard-teacher fa-3x text-warning mb-3"></i>
@@ -46,4 +109,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
+{% endblock %} {% endcomment %}
