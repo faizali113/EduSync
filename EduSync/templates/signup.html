@@ -1,27 +1,266 @@
+
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
 
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-5">
-      <div class="card shadow p-4">
-        <h3 class="text-center mb-3">Institution Signup</h3>
+<style>
+  body {
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
 
-        <form method="post">
-          {% csrf_token %}
-          <input type="text" name="institution" class="form-control mb-3" placeholder="Institution Name" required>
-          <input type="text" name="username" class="form-control mb-3" placeholder="Username" required>
-          <input type="email" name="email" class="form-control mb-3" placeholder="Email" required>
-          <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
+  .signup-container {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d1810 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  html[data-bs-theme="dark"] .signup-container {
+  background: linear-gradient(135deg, #0d0d0d 0%, #1c120e 100%);
+}
+  .signup-card {
+    background: rgba(30, 30, 30, 0.95);
+    border-radius: 24px;
+    padding: 50px 45px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 480px;
+    width: 100%;
+    backdrop-filter: blur(10px);
+    animation: slideUp 0.6s ease-out;
+  }
 
-          <button class="btn btn-success w-100">Create Account</button>
-        </form>
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
-        <p class="text-center mt-3">
-          Already have an account? <a href="{% url 'login' %}">Login here</a>
-        </p>
+  .logo-section {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .logo-text {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-text .highlight {
+    color: #ff6b4a;
+  }
+
+  .tagline {
+    color: #ff6b4a;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .form-title {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 35px;
+    letter-spacing: -0.5px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-control {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px 20px;
+    color: #ffffff;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    height: auto;
+  }
+
+  .form-control:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #ff6b4a;
+    box-shadow: 0 0 0 3px rgba(255, 107, 74, 0.1);
+    color: #ffffff;
+    outline: none;
+  }
+
+  .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .btn-signup {
+    background: linear-gradient(135deg, #ff6b4a 0%, #ff8566 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 15px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 74, 0.3);
+  }
+
+  .btn-signup:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 74, 0.4);
+    background: linear-gradient(135deg, #ff7a59 0%, #ff9475 100%);
+  }
+
+  .btn-signup:active {
+    transform: translateY(0);
+  }
+
+  .login-link {
+    text-align: center;
+    margin-top: 25px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+  }
+
+  .login-link a {
+    color: #ff6b4a;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+
+  .login-link a:hover {
+    color: #ff8566;
+    text-decoration: underline;
+  }
+
+  /* Input icon styling */
+  .input-group {
+    position: relative;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .form-control.with-icon {
+    padding-left: 50px;
+  }
+
+  /* Alert animations */
+  .alert-custom {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    min-width: 300px;
+    animation: slideInRight 0.4s ease-out;
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(100px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+</style>
+
+<div class="signup-container">
+  <div class="signup-card">
+    <div class="logo-section">
+      <div class="logo-text">
+        Edu<span class="highlight">Sync</span>
       </div>
+      <div class="tagline">Academic Management, Reimagined</div>
+    </div>
+
+    <h3 class="form-title">Create Your Account</h3>
+
+    <form method="post" id="signupForm">
+      {% csrf_token %}
+      
+      <div class="form-group">
+        <div class="input-group">
+          <span class="input-icon">🏫</span>
+          <input 
+            type="text" 
+            name="institution" 
+            class="form-control with-icon" 
+            placeholder="Institution Name" 
+            required
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-group">
+          <span class="input-icon">👤</span>
+          <input 
+            type="text" 
+            name="username" 
+            class="form-control with-icon" 
+            placeholder="Username" 
+            required
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-group">
+          <span class="input-icon">📧</span>
+          <input 
+            type="email" 
+            name="email" 
+            class="form-control with-icon" 
+            placeholder="Email Address" 
+            required
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-group">
+          <span class="input-icon">🔒</span>
+          <input 
+            type="password" 
+            name="password" 
+            class="form-control with-icon" 
+            placeholder="Password" 
+            required
+          >
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-signup">
+        Create Account
+      </button>
+    </form>
+
+    <div class="login-link">
+      Already have an account? <a href="{% url 'login' %}">Login here</a>
     </div>
   </div>
 </div>
@@ -41,4 +280,26 @@
   </script>
 {% endif %}
 
+<script>
+  // Add smooth form validation feedback
+  document.getElementById('signupForm').addEventListener('submit', function(e) {
+    const button = this.querySelector('.btn-signup');
+    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating Account...';
+    button.disabled = true;
+  });
+
+  // Input focus animations
+  document.querySelectorAll('.form-control').forEach(input => {
+    input.addEventListener('focus', function() {
+      this.parentElement.style.transform = 'scale(1.01)';
+      this.parentElement.style.transition = 'transform 0.2s ease';
+    });
+    
+    input.addEventListener('blur', function() {
+      this.parentElement.style.transform = 'scale(1)';
+    });
+  });
+</script>
+
 {% endblock %}
+

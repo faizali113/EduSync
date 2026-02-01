@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -81,5 +81,207 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+</body>
+</html> {% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EduSync</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>@import url('https://fonts.cdnfonts.com/css/clash-grotesk');</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <style>
+        :root {
+            --clr-bg:#f4f1ec; --clr-surface:#ffffff; --clr-surface-alt:#eee9e0;
+            --clr-text:#1a1a1a; --clr-text-muted:#6b6560;
+            --clr-accent:#e8533f; --clr-accent-hover:#d44332; --clr-accent-soft:rgba(232,83,63,0.08);
+            --clr-dark:#1a1a1a;
+            --clr-green:#2a9d5c; --clr-green-soft:rgba(42,157,92,0.08);
+            --clr-navy:#1e3a5f; --clr-navy-soft:rgba(30,58,95,0.08);
+            --clr-gold:#d4a843; --clr-gold-soft:rgba(212,168,67,0.08);
+            --shadow-sm:0 2px 12px rgba(0,0,0,0.06);
+            --shadow-md:0 6px 32px rgba(0,0,0,0.09);
+            --radius:16px;
+            --font-head:'Clash Grotesk', sans-serif;
+            --font-body:'Manrope', sans-serif;
+        }
+        [data-bs-theme="dark"] {
+            --clr-bg:#111110; --clr-surface:#1c1c1b; --clr-surface-alt:#252523;
+            --clr-text:#eeebe6; --clr-text-muted:#9a9590;
+            --clr-accent-soft:rgba(232,83,63,0.12);
+            --clr-green-soft:rgba(42,157,92,0.12);
+            --clr-navy-soft:rgba(30,58,95,0.2);
+            --clr-gold-soft:rgba(212,168,67,0.12);
+            --shadow-sm:0 2px 12px rgba(0,0,0,0.2);
+            --shadow-md:0 6px 32px rgba(0,0,0,0.28);
+        }
+
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body {
+            font-family:var(--font-body);
+            background:var(--clr-bg);
+            color:var(--clr-text);
+            min-height:100vh;
+            transition:background .4s, color .4s;
+            -webkit-font-smoothing:antialiased;
+        }
+
+        /* ═══ NAVBAR ═══ */
+        .es-navbar {
+            background:rgba(255,255,255,.72);
+            backdrop-filter:blur(20px);
+            -webkit-backdrop-filter:blur(20px);
+            border-bottom:1px solid rgba(0,0,0,.07);
+            padding:.9rem 0;
+            position:sticky; top:0; z-index:1030;
+            transition:background .4s, border-color .4s;
+        }
+        [data-bs-theme="dark"] .es-navbar {
+            background:rgba(28,28,27,.80);
+            border-color:rgba(255,255,255,.07);
+        }
+        .es-brand {
+            font-family:var(--font-head);
+            font-weight:600; font-size:1.5rem;
+            color:var(--clr-text);
+            text-decoration:none; letter-spacing:-.4px;
+            flex-shrink:0;
+        }
+        .es-brand span { color:var(--clr-accent); }
+
+        /* Centre links */
+        .nav-links {
+            display:flex; align-items:center; gap:.15rem;
+            list-style:none; margin:0; padding:0;
+        }
+        .nav-links a {
+            font-family:var(--font-body);
+            font-size:.84rem; font-weight:500;
+            color:var(--clr-text-muted);
+            text-decoration:none;
+            padding:.42rem .88rem; border-radius:8px;
+            transition:color .25s, background .25s;
+            white-space:nowrap;
+        }
+        .nav-links a:hover { color:var(--clr-text); background:var(--clr-surface-alt); }
+
+        /* Right group */
+        .nav-right { display:flex; align-items:center; gap:.45rem; flex-shrink:0; }
+
+        .btn-theme {
+            background:var(--clr-surface-alt); border:none; border-radius:8px;
+            width:36px; height:36px;
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer; font-size:.95rem;
+            transition:background .3s, transform .2s; color:var(--clr-text);
+        }
+        .btn-theme:hover { transform:scale(1.08); background:var(--clr-accent-soft); }
+
+        .btn-nav-login {
+            font-family:var(--font-body); font-weight:500; font-size:.84rem;
+            color:var(--clr-text); background:transparent; border:none;
+            padding:.42rem 1rem; border-radius:8px;
+            text-decoration:none; cursor:pointer;
+            transition:color .25s, background .25s;
+        }
+        .btn-nav-login:hover { color:var(--clr-accent); background:var(--clr-accent-soft); }
+
+        .btn-nav-cta {
+            font-family:var(--font-body); font-weight:600; font-size:.84rem;
+            color:#fff; background:var(--clr-accent); border:none;
+            padding:.48rem 1.15rem; border-radius:8px;
+            text-decoration:none; cursor:pointer;
+            transition:background .25s, box-shadow .25s, transform .2s;
+            box-shadow:0 3px 12px rgba(232,83,63,.28);
+        }
+        .btn-nav-cta:hover {
+            background:var(--clr-accent-hover);
+            box-shadow:0 4px 16px rgba(232,83,63,.38);
+            transform:translateY(-1px); color:#fff;
+        }
+
+        .btn-nav-logout {
+            font-family:var(--font-body); font-weight:500; font-size:.82rem;
+            color:var(--clr-accent); background:transparent;
+            border:1.5px solid var(--clr-accent);
+            padding:.38rem .9rem; border-radius:8px;
+            cursor:pointer; transition:all .25s;
+        }
+        .btn-nav-logout:hover { background:var(--clr-accent); color:#fff; }
+
+        .nav-avatar { width:34px; height:34px; border-radius:50%; object-fit:cover; border:2px solid var(--clr-accent); }
+        .nav-user-name { font-weight:600; font-size:.84rem; color:var(--clr-text); }
+    </style>
+</head>
+
+<body data-bs-theme="light">
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="es-navbar">
+    <div class="container d-flex align-items-center justify-content-between">
+
+        <a class="es-brand" href="/">Edu<span>Sync</span></a>
+
+        {% if user.is_authenticated and show_dashboard_nav|default:False %}
+            <!-- AUTHENTICATED -->
+            <ul class="nav-links">
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Reports</a></li>
+            </ul>
+            <div class="nav-right">
+                {% if user.userprofile.profile_pic %}
+                    <img src="{{ user.userprofile.profile_pic.url }}" class="nav-avatar" alt="Avatar">
+                {% else %}
+                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="nav-avatar" alt="Avatar">
+                {% endif %}
+                <span class="nav-user-name">{{ user.first_name|default:user.institution.name }}</span>
+                <button id="themeToggle" class="btn-theme">🌙</button>
+                <form action="{% url 'logout' %}" method="post" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-nav-logout">Logout</button>
+                </form>
+            </div>
+        {% else %}
+            <!-- PUBLIC -->
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#serve">Who We Serve</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <div class="nav-right">
+                <button id="themeToggle" class="btn-theme">🌙</button>
+                <a href="{% url 'login' %}" class="btn-nav-login">Login</a>
+                <a href="{% url 'signup' %}" class="btn-nav-cta">Get Started</a>
+            </div>
+        {% endif %}
+    </div>
+</nav>
+
+{% block content %}{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("themeToggle");
+    if (!btn) return;
+    const theme = localStorage.getItem("theme") || "light";
+    document.body.setAttribute("data-bs-theme", theme);
+    btn.innerText = theme === "dark" ? "☀️" : "🌙";
+    btn.onclick = () => {
+        const n = document.body.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
+        document.body.setAttribute("data-bs-theme", n);
+        localStorage.setItem("theme", n);
+        btn.innerText = n === "dark" ? "☀️" : "🌙";
+    };
+});
+</script>
 </body>
 </html>

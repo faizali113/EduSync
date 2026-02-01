@@ -2,28 +2,269 @@
 {% load static %}
 {% block content %}
 
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-4">
-      <div class="card shadow p-4">
-        <h3 class="text-center mb-3">Login</h3>
+<style>
+  body {
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
 
-        <!-- Login Type Selection -->
-        
+  .login-container {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d1a1a 100%);
 
-        <form method="post">
-          {% csrf_token %}
-          <input type="text" name="institution_name" class="form-control mb-3" placeholder="Institution Name" required>
-          <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  html[data-bs-theme="dark"] .login-container {
+  background: linear-gradient(135deg, #0e0e0e 0%, #1a1a1a 100%);
+  }
+  .login-card {
+    background: rgba(30, 30, 30, 0.95);
+    border-radius: 24px;
+    padding: 50px 45px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 450px;
+    width: 100%;
+    backdrop-filter: blur(10px);
+  }
+  .login-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
 
-          <button class="btn btn-primary w-100">Login</button>
-        </form>
+  .login-header h2 {
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+  }
 
-        <p class="text-center mt-3">
-          Don't have an account? <a href="{% url 'signup' %}">Sign up here</a>
-        </p>
-      </div>
+  .login-header p {
+    color: #888;
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .form-group {
+    margin-bottom: 24px;
+  }
+
+  .form-label {
+    color: #b0b0b0;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .form-control {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: #ffffff;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+
+  .form-control:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #ff6b5a;
+    box-shadow: 0 0 0 3px rgba(255, 107, 90, 0.1);
+    outline: none;
+    color: #ffffff;
+  }
+
+  .form-control::placeholder {
+    color: #666;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #ff6b5a 0%, #ff4b3a 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 14px 28px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 90, 0.3);
+    margin-top: 10px;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(255, 107, 90, 0.4);
+    background: linear-gradient(135deg, #ff7b6a 0%, #ff5b4a 100%);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  .signup-link {
+    text-align: center;
+    margin-top: 30px;
+    color: #888;
+    font-size: 14px;
+  }
+
+  .signup-link a {
+    color: #ff6b5a;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+
+  .signup-link a:hover {
+    color: #ff7b6a;
+    text-decoration: underline;
+  }
+
+  .badge-tag {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 107, 90, 0.15);
+    color: #ff6b5a;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  .badge-tag::before {
+    content: "●";
+    margin-right: 6px;
+    font-size: 10px;
+  }
+
+  .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  .remember-me {
+    display: flex;
+    align-items: center;
+    color: #b0b0b0;
+  }
+
+  .remember-me input[type="checkbox"] {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+
+  .forgot-password {
+    color: #ff6b5a;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  .forgot-password:hover {
+    color: #ff7b6a;
+    text-decoration: underline;
+  }
+
+  /* Alert Styles */
+  .alert {
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    border: none;
+    font-size: 14px;
+  }
+
+  .alert-danger {
+    background: rgba(220, 53, 69, 0.15);
+    color: #ff6b6b;
+    border-left: 3px solid #dc3545;
+  }
+
+  .alert-success {
+    background: rgba(40, 167, 69, 0.15);
+    color: #51cf66;
+    border-left: 3px solid #28a745;
+  }
+
+  .stats-section {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    text-align: center;
+  }
+
+  .stat-item h3 {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .stat-item p {
+    color: #888;
+    font-size: 12px;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+</style>
+
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="badge-tag">Academic Management, Reimagined</div>
+      <h2>Welcome Back</h2>
+      <p>Login to access your dashboard</p>
     </div>
+
+    <form method="post">
+      {% csrf_token %}
+      
+      <div class="form-group">
+        <label class="form-label">Institution Name</label>
+        <input type="text" name="institution_name" class="form-control" placeholder="Enter your institution name" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+      </div>
+
+      <div class="remember-forgot">
+        <label class="remember-me">
+          <input type="checkbox" name="remember">
+          <span>Remember me</span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn-primary">Login</button>
+    </form>
+
+    <div class="signup-link">
+      Don't have an account? <a href="{% url 'signup' %}">Sign up here</a>
+    </div>
+
+    
   </div>
 </div>
 
@@ -43,3 +284,4 @@
 {% endif %}
 
 {% endblock %}
+
