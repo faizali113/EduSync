@@ -252,9 +252,9 @@ document.addEventListener("DOMContentLoaded", () => {
         {% else %}
             <!-- PUBLIC -->
             <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#serve">Who We Serve</a></li>
-                <li><a href="#faq">FAQ</a></li>
+                <li><a href="{% url 'landing' %}#features">Features</a></li>
+                <li><a href="{% url 'landing' %}#serve">Who We Serve</a></li>
+                <li><a href="{% url 'landing' %}#faq">FAQ</a></li>
             </ul>
             <div class="nav-right">
                 <button id="themeToggle" class="btn-theme">🌙</button>
