@@ -51,7 +51,7 @@
     .btn-hero .arrow { transition:transform .3s; }
     .btn-hero:hover .arrow { transform:translateX(4px); }
 
-    .hero-stats { display:flex; gap:2.5rem; margin-top:2.8rem; flex-wrap:wrap; }
+    .hero-stats { display:flex; gap:2.5rem; margin-top:2.8rem; flex-wrap:wrap; justify-content:center; }
     .hero-stat-num { font-family:var(--font-head); font-weight:600; font-size:1.7rem; color:var(--clr-text); letter-spacing:-.3px; }
     .hero-stat-label { font-size:.75rem; color:var(--clr-text-muted); font-weight:500; text-transform:uppercase; letter-spacing:.7px; margin-top:.18rem; }
 
@@ -227,6 +227,29 @@
     /* ═══ REVEAL ═══ */
     .reveal { opacity:0; transform:translateY(28px); transition:opacity .7s cubic-bezier(.4,0,.2,1), transform .7s cubic-bezier(.4,0,.2,1); }
     .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 768px) {
+        .hero { padding: 4rem 0; min-height: 80vh; }
+        .features { padding: 4rem 0; }
+        .serve-section { padding: 4rem 0; }
+        .faq-section { padding: 4rem 0; }
+        .cta-section { padding: 3rem 0; }
+        .feature-card { padding: 1.5rem; }
+        .serve-card { padding: 1.5rem 1.2rem; }
+        .hero-stats { gap: 1.5rem; flex-direction: column; align-items: center; }
+        .stats-band { padding: 3rem 0; }
+        .cta-card { padding: 3rem 1.5rem; }
+        .hero-blob { display: none; }
+        .serve-grid { gap: 1rem; }
+    }
+    @media (max-width: 576px) {
+        .hero-title { font-size: clamp(2rem, 8vw, 3.5rem); }
+        .section-title { font-size: clamp(1.5rem, 5vw, 2rem); }
+        .feature-card { padding: 1rem; }
+        .serve-card { padding: 1.2rem 1rem; }
+        .faq-wrap { padding: 0 1rem; }
+    }
 </style>
 
 <!-- ▸ HERO ─────────────────────────── -->
@@ -279,28 +302,28 @@
         </div>
 
         <div class="row g-4">
-            <div class="col-md-3 reveal" style="transition-delay:.08s">
+            <div class="col-12 col-sm-6 col-lg-3 reveal" style="transition-delay:.08s">
                 <div class="feature-card card-red">
                     <div class="feature-icon icon-red">👨‍🏫</div>
                     <h5>Teacher Management</h5>
                     <p>Manage profiles, assign subjects, track workload and performance — all in one place.</p>
                 </div>
             </div>
-            <div class="col-md-3 reveal" style="transition-delay:.16s">
+            <div class="col-12 col-sm-6 col-lg-3 reveal" style="transition-delay:.16s">
                 <div class="feature-card card-green">
                     <div class="feature-icon icon-green">🎓</div>
                     <h5>Student Records</h5>
                     <p>Enrol, track grades, monitor attendance and maintain complete academic histories effortlessly.</p>
                 </div>
             </div>
-            <div class="col-md-3 reveal" style="transition-delay:.24s">
+            <div class="col-12 col-sm-6 col-lg-3 reveal" style="transition-delay:.24s">
                 <div class="feature-card card-navy">
                     <div class="feature-icon icon-navy">📊</div>
                     <h5>Smart Reports</h5>
                     <p>Auto-generate timetables, mark-sheets, attendance logs and academic calendars in seconds.</p>
                 </div>
             </div>
-            <div class="col-md-3 reveal" style="transition-delay:.32s">
+            <div class="col-12 col-sm-6 col-lg-3 reveal" style="transition-delay:.32s">
                 <div class="feature-card card-gold">
                     <div class="feature-icon icon-gold">🔔</div>
                     <h5>Communication Hub</h5>
@@ -375,7 +398,7 @@
 <section class="faq-section" id="faq">
     <div class="container">
         <div class="text-center reveal" style="margin-bottom:3rem;">
-            <div class="section-label" style="justify-content:center;font-size:30px;"><span ></span> FAQ</div>
+            <div class="section-label" style="justify-content:center;"><span class="line"></span> FAQ</div>
             <h2 class="section-title">Got questions?</h2>
             <p class="section-sub" style="margin:0 auto;">Everything you need to know about EduSync.</p>
         </div>

@@ -176,6 +176,56 @@ document.addEventListener("DOMContentLoaded", () => {
         /* Right group */
         .nav-right { display:flex; align-items:center; gap:.45rem; flex-shrink:0; }
 
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            display:none;
+            background:none; border:none;
+            font-size:1.2rem; color:var(--clr-text);
+            cursor:pointer; padding:.5rem;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .es-navbar .container {
+                padding:0 1rem;
+            }
+            .nav-links {
+                position:fixed; top:100%; left:0; right:0;
+                background:var(--clr-surface);
+                flex-direction:column; gap:0;
+                padding:1rem 0;
+                box-shadow:0 4px 20px rgba(0,0,0,.1);
+                transform:translateY(-100%); opacity:0;
+                transition:all .3s ease;
+                border-top:1px solid rgba(0,0,0,.07);
+                z-index:1029;
+            }
+            .nav-links.active {
+                transform:translateY(0); opacity:1;
+            }
+            .nav-links a {
+                padding:1rem 2rem;
+                width:100%; text-align:left;
+                border-bottom:1px solid rgba(0,0,0,.05);
+            }
+            .nav-links a:last-child {
+                border-bottom:none;
+            }
+            .nav-right {
+                gap:.3rem;
+            }
+            .btn-nav-login, .btn-nav-cta {
+                padding:.35rem .8rem;
+                font-size:.75rem;
+            }
+            .mobile-menu-btn {
+                display:block;
+            }
+            .nav-links-mobile {
+                display:flex !important;
+            }
+        }
+
         .btn-theme {
             background:var(--clr-surface-alt); border:none; border-radius:8px;
             width:36px; height:36px;
@@ -248,6 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     {% csrf_token %}
                     <button type="submit" class="btn-nav-logout">Logout</button>
                 </form>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
             </div>
         {% else %}
             <!-- PUBLIC -->
@@ -260,6 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <button id="themeToggle" class="btn-theme">🌙</button>
                 <a href="{% url 'login' %}" class="btn-nav-login">Login</a>
                 <a href="{% url 'signup' %}" class="btn-nav-cta">Get Started</a>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
             </div>
         {% endif %}
     </div>
@@ -281,6 +333,24 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("theme", n);
         btn.innerText = n === "dark" ? "☀️" : "🌙";
     };
+});
+
+// Mobile menu toggle
+function toggleMobileMenu() {
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks) {
+        navLinks.classList.toggle('active');
+    }
+}
+
+// Close mobile menu when clicking outside or on a link
+document.addEventListener('click', (e) => {
+    const navLinks = document.querySelector('.nav-links');
+    const mobileBtn = document.querySelector('.mobile-menu-btn');
+    if (navLinks && navLinks.classList.contains('active') &&
+        !navLinks.contains(e.target) && e.target !== mobileBtn) {
+        navLinks.classList.remove('active');
+    }
 });
 </script>
 </body>
