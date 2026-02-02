@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 
 from .models import Institution, News
 
@@ -35,15 +34,28 @@ def institution_admin_login(request):
         user = authenticate(request, username=username, password=password)
 
         if user is None:
-            messages.error(request, "❌ Username or password is wrong")
-            return redirect('institution_admin_login')
+            context = {
+                'error': "❌ Username or password is wrong",
+                'redirect': 'dashboard',
+                'show_dashboard_nav': True
+            }
+            return render(request, 'institution/admin_login.html', context)
 
         if user.userprofile.role != 'institution_admin':
-            messages.error(request, "❌ You are not an institution admin")
-            return redirect('institution_admin_login')
+            context = {
+                'error': "❌ You are not an institution admin",
+                'redirect': 'dashboard',
+                'show_dashboard_nav': True
+            }
+            return render(request, 'institution/admin_login.html', context)
 
         login(request, user)
-        return redirect('institution_admin_dashboard')
+        context = {
+            'success': "✅ Login successful, moving to admin dashboard",
+            'redirect': 'institution_admin_dashboard',
+            'show_dashboard_nav': True
+        }
+        return render(request, 'institution/admin_login.html', context)
 
     return render(
         request,
@@ -86,7 +98,8 @@ def institution_admin_dashboard(request):
         "institution/admin_dashboard.html",
         {
             "news_list": news_list,
-            "edit_news": edit_news
+            "edit_news": edit_news,
+            "show_dashboard_nav": True
         }
     )
 

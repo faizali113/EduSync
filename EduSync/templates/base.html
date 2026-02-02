@@ -283,8 +283,19 @@ document.addEventListener("DOMContentLoaded", () => {
         {% if user.is_authenticated and show_dashboard_nav|default:False %}
             <!-- AUTHENTICATED -->
             <ul class="nav-links">
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Reports</a></li>
+                {% if user.userprofile.role == 'institution_admin' %}
+                    <li><a href="{% url 'institution_admin_dashboard' %}">Admin Dashboard</a></li>
+                    <li><a href="{% url 'dashboard' %}">Institution Dashboard</a></li>
+                {% elif user.userprofile.role == 'teacher' %}
+                    <li><a href="{% url 'teacher_dashboard' %}">Teacher Dashboard</a></li>
+                    <li><a href="{% url 'dashboard' %}">Institution Dashboard</a></li>
+                {% elif user.userprofile.role == 'student' %}
+                    <li><a href="{% url 'student_dashboard' %}">Student Dashboard</a></li>
+                    <li><a href="{% url 'dashboard' %}">Institution Dashboard</a></li>
+                {% else %}
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Reports</a></li>
+                {% endif %}
             </ul>
             <div class="nav-right">
                 {% if user.userprofile.profile_pic %}

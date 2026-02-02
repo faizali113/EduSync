@@ -8,6 +8,7 @@
     background: linear-gradient(135deg, #1a1a1a 0%, #2d1810 100%);
     min-height: 100vh;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    data-bs-theme: dark;
   }
 
   .admin-login-container {
@@ -256,12 +257,10 @@
     <p class="form-subtitle">Login to manage your institution</p>
 
     <!-- Alerts -->
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert-custom">
-          <p>⚠️ {{ message }}</p>
-        </div>
-      {% endfor %}
+    {% if error %}
+      <div class="alert-custom">
+        <p>⚠️ {{ error }}</p>
+      </div>
     {% endif %}
 
     <form method="post" id="adminLoginForm">
