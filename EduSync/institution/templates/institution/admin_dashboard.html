@@ -3,304 +3,151 @@
 
 <style>
   body {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d1810 100%);
-    min-height: 100vh;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    data-bs-theme: dark;
-  }
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
 
-  /* News Ticker */
-  .news-ticker {
-    background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
-    border-bottom: 2px solid #ff6b4a;
-    padding: 12px 0;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  }
+/* 🌈 PAGE BACKGROUND */
+.dashboard-wrapper {
+  background: linear-gradient(135deg, var(--clr-bg) 0%, var(--clr-surface-alt) 100%);
+  min-height: 100vh;
+}
 
-  .news-ticker marquee {
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 500;
-  }
+/* 📰 NEWS TICKER */
+.news-ticker {
+  background: var(--clr-surface);
+  border-bottom: 2px solid var(--clr-accent);
+  padding: 12px 0;
+  box-shadow: var(--shadow-sm);
+}
 
-  /* Header Section */
-  .dashboard-header {
-    text-align: center;
-    padding: 40px 20px 30px;
-    animation: fadeInDown 0.6s ease-out;
-  }
+.news-ticker marquee {
+  color: var(--clr-text);
+  font-size: 14px;
+}
 
-  .dashboard-title {
-    color: #ffffff;
-    font-size: 36px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    letter-spacing: -0.5px;
-  }
+/* HEADER */
+.dashboard-header {
+  text-align: center;
+  padding: 40px 20px 30px;
+  animation: fadeInDown 0.6s ease-out;
+}
 
-  .dashboard-subtitle {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 16px;
-  }
+.dashboard-title { color: var(--clr-text); font-size: 36px; font-weight: 700; }
+.dashboard-subtitle { color: var(--clr-text-muted); }
 
-  /* Card Styling */
-  .admin-card {
-    background: rgba(30, 30, 30, 0.95);
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-    animation: slideUp 0.6s ease-out;
-    height: 100%;
-  }
+/* 🧊 CARDS */
+.admin-card {
+  background: var(--clr-surface);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(0,0,0,.06);
+  backdrop-filter: blur(10px);
+  transition: .3s;
+  animation: slideUp .6s ease-out;
+  height: 100%;
+}
 
-  .admin-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-    border-color: rgba(255, 107, 74, 0.3);
-  }
+[data-bs-theme="dark"] .admin-card { border-color: rgba(255,255,255,.08); }
 
-  .card-header-custom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
+.admin-card:hover { transform: translateY(-5px); }
 
-  .card-header-custom h5 {
-    color: #ffffff;
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0;
-  }
+/* CARD HEADER */
+.card-header-custom {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+  padding-bottom:15px;
+  border-bottom:1px solid var(--clr-surface-alt);
+}
 
-  .card-icon {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #ff6b4a 0%, #ff8566 100%);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-  }
+.card-header-custom h5 { color: var(--clr-text); }
 
-  /* Form Elements */
-  .form-control-custom {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 12px 15px;
-    color: #ffffff;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    resize: vertical;
-  }
+.card-icon {
+  width:40px; height:40px;
+  background: var(--clr-accent-soft);
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+}
 
-  .form-control-custom:focus {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: #ff6b4a;
-    box-shadow: 0 0 0 3px rgba(255, 107, 74, 0.1);
-    color: #ffffff;
-    outline: none;
-  }
+/* INPUT */
+.form-control-custom {
+  background: var(--clr-surface-alt);
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius:10px;
+  padding:12px 15px;
+  color: var(--clr-text);
+}
 
-  .form-control-custom::placeholder {
-    color: rgba(255, 255, 255, 0.4);
-  }
+[data-bs-theme="dark"] .form-control-custom {
+  border-color: rgba(255,255,255,.1);
+}
 
-  /* Buttons */
-  .btn-primary-custom {
-    background: linear-gradient(135deg, #ff6b4a 0%, #ff8566 100%);
-    border: none;
-    border-radius: 10px;
-    padding: 10px 25px;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 107, 74, 0.3);
-  }
+.form-control-custom:focus {
+  border-color: var(--clr-accent);
+  box-shadow: 0 0 0 3px var(--clr-accent-soft);
+}
 
-  .btn-primary-custom:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 107, 74, 0.4);
-  }
+/* BUTTONS */
+.btn-primary-custom {
+  background: var(--clr-accent);
+  color:#fff;
+  border-radius:10px;
+  padding:10px 25px;
+  font-weight:600;
+}
 
-  .btn-outline-custom {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    padding: 10px 25px;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
+.btn-primary-custom:hover { background: var(--clr-accent-hover); }
 
-  .btn-outline-custom:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: #ff6b4a;
-    color: #ff6b4a;
-  }
+.btn-outline-custom {
+  border:1px solid var(--clr-accent);
+  color:var(--clr-accent);
+  background:transparent;
+}
 
-  .btn-warning-custom {
-    background: linear-gradient(135deg, #ffa726 0%, #ffb74d 100%);
-    border: none;
-    border-radius: 8px;
-    padding: 6px 15px;
-    color: #ffffff;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
+.btn-outline-custom:hover { background: var(--clr-accent-soft); }
 
-  .btn-warning-custom:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 167, 38, 0.4);
-  }
+.btn-warning-custom { background: var(--clr-gold); color:#fff; }
+.btn-danger-custom { background:#e53935; color:#fff; }
+.btn-success-custom { background: var(--clr-green); color:#fff; }
 
-  .btn-danger-custom {
-    background: linear-gradient(135deg, #ef5350 0%, #e57373 100%);
-    border: none;
-    border-radius: 8px;
-    padding: 6px 15px;
-    color: #ffffff;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
+/* NEWS ITEM */
+.news-item {
+  background: var(--clr-surface-alt);
+  border-radius:10px;
+  padding:15px;
+  margin-bottom:12px;
+  display:flex;
+  justify-content:space-between;
+}
 
-  .btn-danger-custom:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(239, 83, 80, 0.4);
-  }
+.news-item span { color: var(--clr-text); }
 
-  .btn-success-custom {
-    background: linear-gradient(135deg, #66bb6a 0%, #81c784 100%);
-    border: none;
-    border-radius: 10px;
-    padding: 10px 25px;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
+/* QUICK ACTION */
+.quick-action-card {
+  background: var(--clr-surface-alt);
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+  transition:.3s;
+}
 
-  .btn-success-custom:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 187, 106, 0.4);
-  }
+.quick-action-card:hover {
+  background: var(--clr-accent-soft);
+  transform: translateY(-3px);
+}
 
-  /* News Item */
-  .news-item {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.3s ease;
-  }
+.quick-action-card h5 { color: var(--clr-text); }
 
-  .news-item:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 107, 74, 0.3);
-  }
+/* EMPTY STATE */
+.empty-state { text-align:center; padding:30px; color:var(--clr-text-muted); }
 
-  .news-item span {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 14px;
-    flex: 1;
-    margin-right: 15px;
-  }
+/* ANIMATIONS */
+@keyframes fadeInDown { from{opacity:0;transform:translateY(-20px);} to{opacity:1;} }
+@keyframes slideUp { from{opacity:0;transform:translateY(30px);} to{opacity:1;} }
 
-  .news-item .action-buttons {
-    display: flex;
-    gap: 8px;
-  }
-
-  /* Quick Action Cards */
-  .quick-action-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-
-  .quick-action-card:hover {
-    background: rgba(255, 107, 74, 0.05);
-    border-color: #ff6b4a;
-    transform: translateY(-3px);
-  }
-
-  .quick-action-card h5 {
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 15px;
-  }
-
-  /* Animations */
-  @keyframes fadeInDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Empty State */
-  .empty-state {
-    text-align: center;
-    padding: 30px;
-    color: rgba(255, 255, 255, 0.5);
-  }
-
-  .empty-state-icon {
-    font-size: 48px;
-    margin-bottom: 15px;
-    opacity: 0.3;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .dashboard-title {
-      font-size: 28px;
-    }
-    
-    .admin-card {
-      padding: 20px;
-    }
-  }
 </style>
 
 {% if news_list %}
@@ -490,10 +337,14 @@
                 <span>{{ n.content }}</span>
 
                 <div>
-                <a href="?edit={{ n.id }}" class="btn btn-sm btn-warning">Edit</a>
-                <a href="{% url 'delete_news' n.id %}" class="btn btn-sm btn-danger">Delete</a>
+                <a href="?edit={{ n.id }}" class="btn-custom btn-warning-custom">✏️ Edit</a>
+
+<form action="{% url 'delete_news' n.id %}" method="post" style="display:inline;">
+  {% csrf_token %}
+  <button type="submit" class="btn-custom btn-danger-custom">🗑️ Delete</button>
+</form>
                 </div>
-                </div>
+                </div>  
             {% endfor %}
 
         </div>

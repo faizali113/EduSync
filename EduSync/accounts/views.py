@@ -116,7 +116,12 @@ def signup_view(request):
     return render(request, 'signup.html')
 
 def logout_view(request):
-    logout(request)
-    return redirect('institution_admin_login')
+    next_url = request.GET.get('next')
 
+    logout(request)
+
+    if next_url:
+        return redirect(next_url)   # Redirect where navbar asked
+
+    return redirect('landing') 
 

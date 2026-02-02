@@ -36,16 +36,14 @@ def institution_admin_login(request):
         if user is None:
             context = {
                 'error': "❌ Username or password is wrong",
-                'redirect': 'dashboard',
-                'show_dashboard_nav': True
+                'redirect': 'dashboard'
             }
             return render(request, 'institution/admin_login.html', context)
 
         if user.userprofile.role != 'institution_admin':
             context = {
                 'error': "❌ You are not an institution admin",
-                'redirect': 'dashboard',
-                'show_dashboard_nav': True
+                'redirect': 'dashboard'
             }
             return render(request, 'institution/admin_login.html', context)
 
@@ -53,14 +51,13 @@ def institution_admin_login(request):
         context = {
             'success': "✅ Login successful, moving to admin dashboard",
             'redirect': 'institution_admin_dashboard',
-            'show_dashboard_nav': True
+            'force_public_nav': True
         }
         return render(request, 'institution/admin_login.html', context)
 
     return render(
         request,
-        'institution/admin_login.html',
-        {'show_dashboard_nav': True}
+        'institution/admin_login.html'
     )
 
 
@@ -99,7 +96,9 @@ def institution_admin_dashboard(request):
         {
             "news_list": news_list,
             "edit_news": edit_news,
-            "show_dashboard_nav": True
+            "show_dashboard_nav": True,
+            "admin_dashboard_mode": True
+            
         }
     )
 

@@ -1,88 +1,4 @@
-{% comment %} <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>EduSync</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% load static %}
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
-
-<body data-bs-theme="light">
-
-<nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
-    <div class="container">
-
-        <a class="navbar-brand fw-bold" href="/">EduSync</a>
-
-        <div class="d-flex align-items-center gap-3">
-
-            {% if user.is_authenticated and show_dashboard_nav|default:False %}
-
-                <!-- DASHBOARD NAVBAR -->
-                {% if user.userprofile.profile_pic %}
-                    <img src="{{ user.userprofile.profile_pic.url }}"
-                         width="40" height="40"
-                         class="rounded-circle border">
-                {% else %}
-                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                         width="40" height="40"
-                         class="rounded-circle border">
-                {% endif %}
-
-                <span class="fw-semibold">
-                    {{ user.first_name|default:user.institution.name }}
-                </span>
-
-                <button id="themeToggle" class="btn btn-secondary btn-sm">🌙</button>
-
-                <form action="{% url 'logout' %}" method="post" class="m-0">
-                    {% csrf_token %}
-                    <button class="btn btn-danger btn-sm">Logout</button>
-                </form>
-
-            {% else %}
-
-                <!-- PUBLIC NAVBAR -->
-                <a href="{% url 'login' %}" class="btn btn-success btn-sm">Institute Login</a>
-                <a href="{% url 'signup' %}" class="btn btn-warning btn-sm">Get Started</a>
-                <button id="themeToggle" class="btn btn-secondary btn-sm">🌙</button>
-
-            {% endif %}
-
-        </div>
-    </div>
-</nav>
-
-{% block content %}{% endblock %}
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const btn = document.getElementById("themeToggle");
-    if (!btn) return;
-
-    const theme = localStorage.getItem("theme") || "light";
-    document.body.setAttribute("data-bs-theme", theme);
-    btn.innerText = theme === "dark" ? "☀️ Light" : "🌙 Dark";
-
-    btn.onclick = () => {
-        const newTheme =
-            document.body.getAttribute("data-bs-theme") === "dark"
-            ? "light" : "dark";
-
-        document.body.setAttribute("data-bs-theme", newTheme);
-        localStorage.setItem("theme", newTheme);
-        btn.innerText = newTheme === "dark" ? "☀️ Light" : "🌙 Dark";
-    };
-});
-</script>
-
-</body>
-</html> {% endcomment %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -272,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
     </style>
 </head>
 
-<body data-bs-theme="light">
+<body>
 
 <!-- ═══ NAVBAR ═══ -->
 <nav class="es-navbar">
@@ -280,51 +196,66 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <a class="es-brand" href="/">Edu<span>Sync</span></a>
 
-        {% if user.is_authenticated and show_dashboard_nav|default:False %}
-            <!-- AUTHENTICATED -->
-            <ul class="nav-links">
-                {% if user.userprofile.role == 'institution_admin' %}
-                    <li><a href="{% url 'institution_admin_dashboard' %}">Admin Dashboard</a></li>
-                    <li><a href="{% url 'dashboard' %}">Institution Dashboard</a></li>
-                {% elif user.userprofile.role == 'teacher' %}
-                    <li><a href="{% url 'teacher_dashboard' %}">Teacher Dashboard</a></li>
-                    <li><a href="{% url 'dashboard' %}">Institution Dashboard</a></li>
-                {% elif user.userprofile.role == 'student' %}
-                    <li><a href="{% url 'student_dashboard' %}">Student Dashboard</a></li>
-                    <li><a href="{% url 'dashboard' %}">Institution Dashboard</a></li>
-                {% else %}
-                    <li><a href="#">Dashboard</a></li>
-                    <li><a href="#">Reports</a></li>
-                {% endif %}
-            </ul>
-            <div class="nav-right">
-                {% if user.userprofile.profile_pic %}
-                    <img src="{{ user.userprofile.profile_pic.url }}" class="nav-avatar" alt="Avatar">
-                {% else %}
-                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="nav-avatar" alt="Avatar">
-                {% endif %}
-                <span class="nav-user-name">{{ user.first_name|default:user.institution.name }}</span>
-                <button id="themeToggle" class="btn-theme">🌙</button>
-                <form action="{% url 'logout' %}" method="post" class="m-0">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-nav-logout">Logout</button>
-                </form>
-                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-            </div>
-        {% else %}
-            <!-- PUBLIC -->
-            <ul class="nav-links">
-                <li><a href="{% url 'landing' %}#features">Features</a></li>
-                <li><a href="{% url 'landing' %}#serve">Who We Serve</a></li>
-                <li><a href="{% url 'landing' %}#faq">FAQ</a></li>
-            </ul>
-            <div class="nav-right">
-                <button id="themeToggle" class="btn-theme">🌙</button>
-                <a href="{% url 'login' %}" class="btn-nav-login">Login</a>
-                <a href="{% url 'signup' %}" class="btn-nav-cta">Get Started</a>
-                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-            </div>
-        {% endif %}
+        {% if user.is_authenticated %}
+
+    {% if admin_dashboard_mode %}
+        <!-- 🔐 ADMIN DASHBOARD NAVBAR (ONLY LOGOUT) -->
+        <div class="nav-right ms-auto">
+            <button id="themeToggle" class="btn-theme">🌙</button>
+            <form action="{% url 'logout' %}?next={% url 'dashboard' %}" method="post" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="btn-nav-logout">Logout</button>
+            </form>
+        </div>
+
+    {% elif show_dashboard_nav %}
+        <!-- 🧭 NORMAL DASHBOARD NAVBAR -->
+        <ul class="nav-links">
+            {% if user.userprofile.role == 'institution_admin' %}
+                <li><a href="{% url 'institution_admin_dashboard' %}">Admin Dashboard</a></li>
+                <li><a href="{% url 'dashboard' %}">Institution Dashboard</a></li>
+            {% elif user.userprofile.role == 'teacher' %}
+                <li><a href="{% url 'teacher_dashboard' %}">Teacher Dashboard</a></li>
+                <li><a href="{% url 'dashboard' %}">Institution Dashboard</a></li>
+            {% elif user.userprofile.role == 'student' %}
+                <li><a href="{% url 'student_dashboard' %}">Student Dashboard</a></li>
+                <li><a href="{% url 'dashboard' %}">Institution Dashboard</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="nav-right">
+            <button id="themeToggle" class="btn-theme">🌙</button>
+            <form action="{% url 'logout' %}" method="post" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="btn-nav-logout">Logout</button>
+            </form>
+        </div>
+
+    {% else %}
+        <!-- 🔓 LOGGED IN BUT NOT DASHBOARD PAGE -->
+        <div class="nav-right ms-auto">
+            <button id="themeToggle" class="btn-theme">🌙</button>
+            <form action="{% url 'logout' %}" method="post" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="btn-nav-logout">Logout</button>
+            </form>
+        </div>
+    {% endif %}
+
+{% else %}
+    <!-- 🌍 PUBLIC NAVBAR -->
+    <ul class="nav-links">
+        <li><a href="{% url 'landing' %}#features">Features</a></li>
+        <li><a href="{% url 'landing' %}#serve">Who We Serve</a></li>
+        <li><a href="{% url 'landing' %}#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-right">
+        <button id="themeToggle" class="btn-theme">🌙</button>
+        <a href="{% url 'login' %}" class="btn-nav-login">Login</a>
+        <a href="{% url 'signup' %}" class="btn-nav-cta">Get Started</a>
+    </div>
+{% endif %}
+
     </div>
 </nav>
 
@@ -332,20 +263,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+
 document.addEventListener("DOMContentLoaded", () => {
     const btn = document.getElementById("themeToggle");
     if (!btn) return;
-    const theme = localStorage.getItem("theme") || "light";
-    document.body.setAttribute("data-bs-theme", theme);
+
+    const html = document.documentElement;
+    const theme = html.getAttribute("data-bs-theme") || "light";
     btn.innerText = theme === "dark" ? "☀️" : "🌙";
+
     btn.onclick = () => {
-        const n = document.body.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
-        document.body.setAttribute("data-bs-theme", n);
-        localStorage.setItem("theme", n);
-        btn.innerText = n === "dark" ? "☀️" : "🌙";
+        const newTheme = html.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
+        html.setAttribute("data-bs-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        btn.innerText = newTheme === "dark" ? "☀️" : "🌙";
     };
 });
 
+
+(function () {
+  const saved = localStorage.getItem("theme") || "light";
+  document.documentElement.setAttribute("data-bs-theme", saved);
+})();
 // Mobile menu toggle
 function toggleMobileMenu() {
     const navLinks = document.querySelector('.nav-links');
