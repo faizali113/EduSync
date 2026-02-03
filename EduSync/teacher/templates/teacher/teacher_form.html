@@ -10,32 +10,13 @@
   {% if error %}
     <div class="alert alert-danger">{{ error }}</div>
   {% else %}
-    <form method="post" class="card p-4">
+    <form method="post" class="card p-4" enctype="multipart/form-data">
       {% csrf_token %}
+
       <div class="row g-3">
         <div class="col-md-6">
-          <label class="form-label">Username</label>
-          {{ form.username }}
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Email</label>
-          {{ form.email }}
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">First Name</label>
-          {{ form.first_name }}
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Last Name</label>
-          {{ form.last_name }}
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Password</label>
-          {{ form.password1 }}
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Confirm Password</label>
-          {{ form.password2 }}
+          <label class="form-label">Teacher Name</label>
+          {{ form.name }}
         </div>
         <div class="col-md-6">
           <label class="form-label">Employee ID</label>
@@ -49,11 +30,11 @@
           <label class="form-label">Qualification</label>
           {{ form.qualification }}
         </div>
-        <div class="col-md-6">
-          <label class="form-label">Phone</label>
-          {{ form.phone }}
-        </div>
 
+        <div class="col-md-6">
+          <label class="form-label">Photo</label>
+          {{ form.photo }}
+        </div>
         <div class="col-md-12">
           <label class="form-label">Courses</label>
           {{ form.courses }}

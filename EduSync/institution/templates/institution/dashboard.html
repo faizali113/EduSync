@@ -89,7 +89,7 @@
 }
 
 .panel-card:hover {
-  transform: translateY(-10px) scale(1.02);
+  transform: none;
 }
 
 /* Accent themes */
@@ -221,6 +221,14 @@
 .course-name { font-size: 18px; font-weight: 700; color: var(--clr-text); }
 .course-meta { font-size: 13px; color: var(--clr-text-muted); }
 .course-body { padding-top: 6px; }
+.teacher-photo {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--clr-accent);
+  margin-bottom: 6px;
+}
 .teacher-card {
   background: var(--clr-surface);
   border-radius: 14px;
@@ -230,12 +238,6 @@
 .teacher-name { font-weight: 600; color: var(--clr-text); margin-bottom: 2px; }
 
 
-/* Smooth collapse animation */
-.collapse, .collapsing {
-  transition: height .35s ease, opacity .25s ease;
-}
-.collapse.show { opacity: 1; }
-.collapse { opacity: 0; }
 
 </style>
 
@@ -260,7 +262,7 @@
 </div>
 
 <div class="panels-container">
-    <div class="row g-4">
+    <div class="row g-5">
         <!-- Admin Panel -->
         <div class="col-lg-4 col-md-6">
             <div class="panel-card admin-panel">
@@ -363,8 +365,8 @@
 
 
 {% if courses %}
-<div class="panels-container" style="padding-top: 0;">
-    <div class="row g-4">
+<div id="course-overview" class="panels-container" style="padding-top: 0;">
+    <div class="row g-5">
         <div class="col-12">
             <div class="panel-card admin-panel" style="text-align:left;">
                 <h4 class="panel-title" style="margin-bottom:12px;">Courses</h4>
@@ -395,8 +397,11 @@
                                     {% for t in course.teachers.all %}
                                     <div class="col-lg-4 col-md-6">
                                         <div class="teacher-card">
+                                            {% if t.photo %}
+                                            <img class="teacher-photo" src="{{ t.photo.url }}" alt="{{ t.user.get_full_name|default:t.user.username }}">
+                                            {% endif %}
                                             <div class="teacher-name">{{ t.user.get_full_name|default:t.user.username }}</div>
-                                            <div class="panel-description">{{ t.employee_id }} | {{ t.department }}</div>
+                                            
                                             <div class="panel-description">{{ t.qualification }}</div>
                                             {% if t.phone %}
                                             <div class="panel-description">{{ t.phone }}</div>
@@ -420,27 +425,6 @@
 {% endif %}
 
 <script>
-  // Add parallax effect to panel cards
-  document.querySelectorAll('.panel-card').forEach(card => {
-    card.addEventListener('mousemove', function(e) {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      
-      const rotateX = (y - centerY) / 20;
-      const rotateY = (centerX - x) / 20;
-      
-      card.style.transform = `translateY(-10px) scale(1.02) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    });
-    
-    card.addEventListener('mouseleave', function() {
-      card.style.transform = 'translateY(0) scale(1) rotateX(0) rotateY(0)';
-    });
-  });
-
   // Add click ripple effect
   document.querySelectorAll('.btn-panel').forEach(button => {
     button.addEventListener('click', function(e) {
@@ -486,6 +470,14 @@
 .course-name { font-size: 18px; font-weight: 700; color: var(--clr-text); }
 .course-meta { font-size: 13px; color: var(--clr-text-muted); }
 .course-body { padding-top: 6px; }
+.teacher-photo {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--clr-accent);
+  margin-bottom: 6px;
+}
 .teacher-card {
   background: var(--clr-surface);
   border-radius: 14px;
@@ -495,12 +487,6 @@
 .teacher-name { font-weight: 600; color: var(--clr-text); margin-bottom: 2px; }
 
 
-/* Smooth collapse animation */
-.collapse, .collapsing {
-  transition: height .35s ease, opacity .25s ease;
-}
-.collapse.show { opacity: 1; }
-.collapse { opacity: 0; }
 
 </style>
 

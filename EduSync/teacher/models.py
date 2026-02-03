@@ -10,6 +10,7 @@ class Teacher(models.Model):
     qualification = models.CharField(max_length=200)
     hire_date = models.DateField(auto_now_add=True)
     phone = models.CharField(max_length=15, blank=True)
+    photo = models.ImageField(upload_to='teachers/', blank=True, null=True)
     
     def __str__(self):
         return f"{self.employee_id} - {self.user.get_full_name()}"

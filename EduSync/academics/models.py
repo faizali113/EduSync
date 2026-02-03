@@ -1,6 +1,5 @@
 from django.db import models
 from teacher.models import Teacher
-from student.models import Student
 from institution.models import Institution
 
 
@@ -15,6 +14,7 @@ class Course(models.Model):
         Teacher, blank=True
     )
     credits = models.IntegerField(default=3)
+    duration_months = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -34,7 +34,7 @@ class Grade(models.Model):
     ]
 
     student = models.ForeignKey(
-        Student, on_delete=models.CASCADE
+        'student.Student', on_delete=models.CASCADE
     )
     course = models.ForeignKey(
         Course, on_delete=models.CASCADE

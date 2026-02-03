@@ -7,7 +7,7 @@ from institution.models import Institution
 
 @require_http_methods(["GET", "POST"])
 def landing_view(request):
-    return render(request, 'landing.html')
+    return render(request, 'landing.html', {'force_public_nav': True})
 
 
 @require_http_methods(["GET", "POST"])

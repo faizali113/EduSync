@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Teacher
 from academics.models import Course
@@ -7,6 +8,16 @@ from student.models import Student
 from institution.models import Institution
 from accounts.models import UserProfile
 from .forms import TeacherCreateForm, TeacherEditForm
+
+
+def _unique_username(base):
+    from django.contrib.auth.models import User
+    username = base
+    suffix = 1
+    while User.objects.filter(username=username).exists():
+        username = f"{base}{suffix}"
+        suffix += 1
+    return username
 
 
 def _get_institution_admin(request):
@@ -91,14 +102,43 @@ def teacher_create(request):
         return render(request, 'teacher/teacher_form.html', {'error': error})
 
     if request.method == 'POST':
-        form = TeacherCreateForm(request.POST, institution=institution)
+        form = TeacherCreateForm(request.POST, request.FILES, institution=institution)
         if form.is_valid():
-            teacher = form.save(institution=institution)
+            from django.contrib.auth.models import User
+            full_name = form.cleaned_data['name'].strip()
+            parts = full_name.split(None, 1)
+            first_name = parts[0] if parts else full_name
+            last_name = parts[1] if len(parts) > 1 else ""
+            employee_id = form.cleaned_data['employee_id']
+            username = _unique_username(f"teacher_{employee_id}")
+            password = employee_id
+
+            user = User.objects.create_user(username=username, password=password)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+
+            teacher = Teacher.objects.create(
+                user=user,
+                institution=institution,
+                employee_id=employee_id,
+                department=form.cleaned_data['department'],
+                qualification=form.cleaned_data['qualification'],
+                photo=form.cleaned_data.get('photo'),
+            )
+
+            courses = form.cleaned_data.get('courses')
+            if courses:
+                for course in courses:
+                    course.teachers.add(teacher)
+
             UserProfile.objects.create(
                 user=teacher.user,
                 role='teacher',
                 institution=institution.name
             )
+            messages.success(request, 'Teacher added successfully.')
+            messages.success(request, 'Teacher updated successfully.')
             return redirect('teacher_list')
     else:
         form = TeacherCreateForm(institution=institution)
@@ -115,18 +155,19 @@ def teacher_edit(request, teacher_id):
     teacher = get_object_or_404(Teacher, id=teacher_id, institution=institution)
 
     if request.method == 'POST':
-        form = TeacherEditForm(request.POST, teacher=teacher, institution=institution)
+        form = TeacherEditForm(request.POST, request.FILES, teacher=teacher, institution=institution)
         if form.is_valid():
-            teacher.user.username = form.cleaned_data['username']
-            teacher.user.first_name = form.cleaned_data['first_name']
-            teacher.user.last_name = form.cleaned_data['last_name']
-            teacher.user.email = form.cleaned_data['email']
+            full_name = form.cleaned_data['name'].strip()
+            parts = full_name.split(None, 1)
+            teacher.user.first_name = parts[0] if parts else full_name
+            teacher.user.last_name = parts[1] if len(parts) > 1 else ''
             teacher.user.save()
 
             teacher.employee_id = form.cleaned_data['employee_id']
             teacher.department = form.cleaned_data['department']
             teacher.qualification = form.cleaned_data['qualification']
-            teacher.phone = form.cleaned_data.get('phone', '')
+            if form.cleaned_data.get('photo'):
+                teacher.photo = form.cleaned_data.get('photo')
             teacher.save()
 
             selected_courses = set(form.cleaned_data.get('courses', []))
@@ -158,4 +199,5 @@ def teacher_delete(request, teacher_id):
     user = teacher.user
     teacher.delete()
     user.delete()
+    messages.success(request, 'Teacher deleted successfully.')
     return redirect('teacher_list')

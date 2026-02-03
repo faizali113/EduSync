@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+    <h2 class="mb-0">Students</h2>
+    <div class="d-flex gap-2">
+      <a class="btn btn-primary" href="{% url 'student_create' %}">Add Student</a>
+      <a class="btn btn-outline-dark" href="{% url 'institution_admin_dashboard' %}">Back to Admin Dashboard</a>
+    </div>
+  </div>
+
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% elif students %}
+    <div class="table-responsive">
+      <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Roll No.</th>
+            <th>Course</th>
+            <th>Academic Year</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in students %}
+          <tr>
+            <td>{{ s.user.get_full_name|default:s.user.username }}</td>
+            <td>{{ s.student_id }}</td>
+            <td>{{ s.course.name|default:"-" }}</td>
+            <td>{{ s.academic_year|default:"-" }}</td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-secondary" href="{% url 'student_edit' s.id %}">Edit</a>
+              <form method="post" action="{% url 'student_delete' s.id %}" class="d-inline" onsubmit="return confirm('Delete this student?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info mb-0">No students found.</div>
+  {% endif %}
+</div>
+{% endblock %}

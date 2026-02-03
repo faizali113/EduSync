@@ -196,7 +196,20 @@
 
         <a class="es-brand" href="/">Edu<span>Sync</span></a>
 
-        {% if user.is_authenticated %}
+        {% if force_public_nav %}
+    <!-- ?? PUBLIC NAVBAR (FORCED) -->
+    <ul class="nav-links">
+        <li><a href="{% url 'landing' %}#features">Features</a></li>
+        <li><a href="{% url 'landing' %}#serve">Who We Serve</a></li>
+        <li><a href="{% url 'landing' %}#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-right">
+        <button id="themeToggle" class="btn-theme">??</button>
+        <a href="{% url 'login' %}" class="btn-nav-login">Login</a>
+        <a href="{% url 'signup' %}" class="btn-nav-cta">Get Started</a>
+    </div>
+
+        {% elif user.is_authenticated %}
 
     {% if admin_dashboard_mode %}
         <!-- 🔐 ADMIN DASHBOARD NAVBAR (ONLY LOGOUT) -->

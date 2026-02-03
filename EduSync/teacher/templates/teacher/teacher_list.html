@@ -1,7 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+  .teacher-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+  .teacher-card {
+    background: var(--clr-surface);
+    border-radius: 16px;
+    padding: 18px;
+    border: 1px solid rgba(0,0,0,.06);
+    box-shadow: var(--shadow-sm);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .teacher-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .teacher-photo {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--clr-accent);
+  }
+  .teacher-avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--clr-surface-alt);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: var(--clr-text);
+  }
+  .teacher-name { font-weight: 700; font-size: 18px; color: var(--clr-text); }
+  .teacher-meta { color: var(--clr-text-muted); font-size: 13px; }
+  .badge-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .course-badge {
+    background: var(--clr-surface-alt);
+    border-radius: 999px; padding: 4px 10px; font-size: 12px;
+    color: var(--clr-text);
+  }
+</style>
+
 <div class="container py-5">
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
     <h2 class="mb-0">Teachers</h2>
     <div class="d-flex gap-2">
@@ -13,45 +54,32 @@
   {% if error %}
     <div class="alert alert-danger">{{ error }}</div>
   {% elif teachers %}
-    <div class="table-responsive">
-      <table class="table table-striped align-middle">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Employee ID</th>
-            <th>Department</th>
-            <th>Courses</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for t in teachers %}
-          <tr>
-            <td>{{ t.user.get_full_name|default:t.user.username }}</td>
-            <td>{{ t.employee_id }}</td>
-            <td>{{ t.department }}</td>
-            <td>
-              {% with t_courses=t.course_set.all %}
-                {% if t_courses %}
-                  {% for c in t_courses %}
-                    <span class="badge text-bg-secondary">{{ c.name }}</span>
-                  {% endfor %}
-                {% else %}
-                  <span class="text-muted">No courses</span>
-                {% endif %}
-              {% endwith %}
-            </td>
-            <td class="text-end">
-              <a class="btn btn-sm btn-outline-secondary" href="{% url 'teacher_edit' t.id %}">Edit</a>
-              <form method="post" action="{% url 'teacher_delete' t.id %}" class="d-inline" onsubmit="return confirm('Delete this teacher?');">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-              </form>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <div class="teacher-grid">
+      {% for t in teachers %}
+        <div class="teacher-card">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            {% if t.photo %}
+            <img class="teacher-photo" src="{{ t.photo.url }}" alt="{{ t.user.get_full_name|default:t.user.username }}">
+            {% else %}
+            <div class="teacher-avatar">{{ t.user.first_name|default:t.user.username|slice:":1" }}</div>
+            {% endif %}
+            <div>
+              <div class="teacher-name">{{ t.user.get_full_name|default:t.user.username }}</div>
+              <div class="teacher-meta">{{ t.department }}</div>
+            </div>
+          </div>
+
+          <div class="teacher-meta">{{ t.qualification }}</div>
+
+          <div class="d-flex gap-2 mt-3">
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'teacher_edit' t.id %}">Edit</a>
+            <form method="post" action="{% url 'teacher_delete' t.id %}" onsubmit="return confirm('Delete this teacher?');">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
     </div>
   {% else %}
     <div class="alert alert-info mb-0">No teachers found.</div>
