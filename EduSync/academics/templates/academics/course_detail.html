@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h2 class="mb-0">Course Details</h2>
+    <a class="btn btn-outline-dark" href="{% url 'course_list' %}">Back to Courses</a>
+  </div>
+
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% else %}
+    <div class="card mb-4">
+      <div class="card-body">
+        <h4 class="card-title mb-1">{{ course.name }}</h4>
+        <div class="text-muted">{{ course.code }} | Credits: {{ course.credits }}</div>
+        {% if course.description %}
+          <p class="mt-3 mb-0">{{ course.description }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <h5 class="mb-3">Grades</h5>
+    {% if grades %}
+      <div class="table-responsive">
+        <table class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Grade</th>
+              <th>Marks</th>
+              <th>Date Assigned</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for g in grades %}
+            <tr>
+              <td>{{ g.student }}</td>
+              <td>{{ g.grade }}</td>
+              <td>{{ g.marks }}</td>
+              <td>{{ g.date_assigned|date:"M d, Y" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="alert alert-info mb-0">No grades recorded for this course.</div>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

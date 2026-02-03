@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 900px;">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h2 class="mb-0">{% if mode == 'edit' %}Edit Teacher{% else %}Add Teacher{% endif %}</h2>
+    <a class="btn btn-outline-dark" href="{% url 'teacher_list' %}">Back to Teachers</a>
+  </div>
+
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% else %}
+    <form method="post" class="card p-4">
+      {% csrf_token %}
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Username</label>
+          {{ form.username }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Email</label>
+          {{ form.email }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">First Name</label>
+          {{ form.first_name }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Last Name</label>
+          {{ form.last_name }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Password</label>
+          {{ form.password1 }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Confirm Password</label>
+          {{ form.password2 }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Employee ID</label>
+          {{ form.employee_id }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Department</label>
+          {{ form.department }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Qualification</label>
+          {{ form.qualification }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Phone</label>
+          {{ form.phone }}
+        </div>
+
+        <div class="col-md-12">
+          <label class="form-label">Courses</label>
+          {{ form.courses }}
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">{% if mode == 'edit' %}Save Changes{% else %}Create Teacher{% endif %}</button>
+        <a class="btn btn-outline-secondary" href="{% url 'teacher_list' %}">Cancel</a>
+      </div>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

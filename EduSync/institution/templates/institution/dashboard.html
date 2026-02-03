@@ -183,6 +183,60 @@
   .panel-card{padding:30px 25px;}
 }
 
+
+/* Chevron for collapsible courses */
+.course-toggle {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--clr-surface-alt);
+  transition: transform .25s ease;
+  font-size: 12px;
+  color: var(--clr-text);
+}
+.course-toggle[aria-expanded="true"] .chevron {
+  transform: rotate(180deg);
+}
+
+
+.course-list { display:flex; flex-direction:column; gap:14px; }
+.course-item {
+  background: var(--clr-surface-alt);
+  border-radius: 16px;
+  padding: 16px 18px;
+  border: 1px solid rgba(0,0,0,.05);
+}
+.course-title { display:flex; flex-direction:column; gap:4px; }
+.course-name { font-size: 18px; font-weight: 700; color: var(--clr-text); }
+.course-meta { font-size: 13px; color: var(--clr-text-muted); }
+.course-body { padding-top: 6px; }
+.teacher-card {
+  background: var(--clr-surface);
+  border-radius: 14px;
+  padding: 14px 16px;
+  border: 1px solid rgba(0,0,0,.06);
+}
+.teacher-name { font-weight: 600; color: var(--clr-text); margin-bottom: 2px; }
+
+
+/* Smooth collapse animation */
+.collapse, .collapsing {
+  transition: height .35s ease, opacity .25s ease;
+}
+.collapse.show { opacity: 1; }
+.collapse { opacity: 0; }
+
 </style>
 
 {% if news_list %}
@@ -306,7 +360,64 @@
             </div>
         </div>
     </div>
+
+
+{% if courses %}
+<div class="panels-container" style="padding-top: 0;">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="panel-card admin-panel" style="text-align:left;">
+                <h4 class="panel-title" style="margin-bottom:12px;">Courses</h4>
+                <p class="panel-description" style="margin-bottom:20px;">Click a course to view details and teachers.</p>
+
+                <div class="course-list">
+                    {% for course in courses %}
+                    <div class="course-item">
+                        <button class="btn btn-link p-0 course-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#course-{{ course.id }}" aria-expanded="false" aria-controls="course-{{ course.id }}" style="text-decoration:none; color: var(--clr-text); font-weight:600;">
+                            <span class="course-title">
+                                <span class="course-name">{{ course.name }}</span>
+                                <span class="course-meta">{{ course.code }} | Credits: {{ course.credits }}</span>
+                            </span>
+                            <span class="chevron">&#9660;</span>
+                        </button>
+
+                        <div id="course-{{ course.id }}" class="collapse mt-3">
+                            <div class="course-body">
+                                {% if course.description %}
+                                <p class="panel-description">{{ course.description }}</p>
+                                {% else %}
+                                <p class="panel-description">No description provided.</p>
+                                {% endif %}
+
+                                <div class="panel-stats" style="margin:16px 0 10px;">Teachers</div>
+                                {% if course.teachers.all %}
+                                <div class="row g-2">
+                                    {% for t in course.teachers.all %}
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="teacher-card">
+                                            <div class="teacher-name">{{ t.user.get_full_name|default:t.user.username }}</div>
+                                            <div class="panel-description">{{ t.employee_id }} | {{ t.department }}</div>
+                                            <div class="panel-description">{{ t.qualification }}</div>
+                                            {% if t.phone %}
+                                            <div class="panel-description">{{ t.phone }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                    <div class="panel-description">No teachers assigned.</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+{% endif %}
 
 <script>
   // Add parallax effect to panel cards
@@ -362,69 +473,37 @@
     transform: scale(4);
   }
 }
+
+
+.course-list { display:flex; flex-direction:column; gap:14px; }
+.course-item {
+  background: var(--clr-surface-alt);
+  border-radius: 16px;
+  padding: 16px 18px;
+  border: 1px solid rgba(0,0,0,.05);
+}
+.course-title { display:flex; flex-direction:column; gap:4px; }
+.course-name { font-size: 18px; font-weight: 700; color: var(--clr-text); }
+.course-meta { font-size: 13px; color: var(--clr-text-muted); }
+.course-body { padding-top: 6px; }
+.teacher-card {
+  background: var(--clr-surface);
+  border-radius: 14px;
+  padding: 14px 16px;
+  border: 1px solid rgba(0,0,0,.06);
+}
+.teacher-name { font-weight: 600; color: var(--clr-text); margin-bottom: 2px; }
+
+
+/* Smooth collapse animation */
+.collapse, .collapsing {
+  transition: height .35s ease, opacity .25s ease;
+}
+.collapse.show { opacity: 1; }
+.collapse { opacity: 0; }
+
 </style>
 
 {% endblock %}
 
 
-{% comment %} {% extends 'base.html' %}
-{% block content %}
-
-{% if news_list %}
-<div class="container-fluid bg-dark text-white py-2 mb-4">
-    <marquee direction="left" scrollamount="6">
-        {% for n in news_list %}
-            🔔 {{ n.content }} &nbsp;&nbsp;&nbsp;
-        {% endfor %}
-    </marquee>
-</div>
-{% endif %}
-
-<div class="container mt-4">
-    <h1 class="text-center mb-4">Welcome, {{ institution.name }}</h1>
-
-    <div class="row">
-        <!-- Admin Panel -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-cogs fa-3x text-primary mb-3"></i>
-                    <h5 class="card-title">Admin Panel</h5>
-                    <p class="card-text">Manage institution settings.</p>
-                    <a href="{% url 'institution_admin_login' %}" class="btn btn-primary">
-                        Go to Admin Panel
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Student Panel -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-user-graduate fa-3x text-success mb-3"></i>
-                    <h5 class="card-title">Student Panel</h5>
-                    <p class="card-text">Manage students.</p>
-                    <a href="{% url 'student_dashboard' %}" class="btn btn-success">
-                        Go to Student Panel
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Teacher Panel -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-chalkboard-teacher fa-3x text-warning mb-3"></i>
-                    <h5 class="card-title">Teacher Panel</h5>
-                    <p class="card-text">Manage teachers.</p>
-                    <a href="#" class="btn btn-warning">Go to Teacher Panel</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-{% endblock %}
- {% endcomment %}

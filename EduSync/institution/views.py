@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
 from .models import Institution, News
+from academics.models import Course
+from teacher.models import Teacher
 
 
 # 🔹 INSTITUTION DASHBOARD (WELCOME PAGE)
@@ -14,11 +16,15 @@ def dashboard_view(request):
         institution = None
 
     news_list = News.objects.order_by("-created_at")
+    courses = Course.objects.filter(institution=institution) if institution else Course.objects.none()
+    teachers = Teacher.objects.filter(institution=institution) if institution else Teacher.objects.none()
 
     context = {
         'institution': institution,
         'user': request.user,
-        'news_list': news_list,          # ✅ NEWS PASSED HERE
+        'news_list': news_list,
+        'courses': courses,
+        'teachers': teachers,          # ✅ NEWS PASSED HERE
         'show_dashboard_nav': True,
     }
 

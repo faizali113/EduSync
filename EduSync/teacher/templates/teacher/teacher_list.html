@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+    <h2 class="mb-0">Teachers</h2>
+    <div class="d-flex gap-2">
+      <a class="btn btn-primary" href="{% url 'teacher_create' %}">Add Teacher</a>
+      <a class="btn btn-outline-dark" href="{% url 'institution_admin_dashboard' %}">Back to Admin Dashboard</a>
+    </div>
+  </div>
+
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% elif teachers %}
+    <div class="table-responsive">
+      <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Employee ID</th>
+            <th>Department</th>
+            <th>Courses</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in teachers %}
+          <tr>
+            <td>{{ t.user.get_full_name|default:t.user.username }}</td>
+            <td>{{ t.employee_id }}</td>
+            <td>{{ t.department }}</td>
+            <td>
+              {% with t_courses=t.course_set.all %}
+                {% if t_courses %}
+                  {% for c in t_courses %}
+                    <span class="badge text-bg-secondary">{{ c.name }}</span>
+                  {% endfor %}
+                {% else %}
+                  <span class="text-muted">No courses</span>
+                {% endif %}
+              {% endwith %}
+            </td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-secondary" href="{% url 'teacher_edit' t.id %}">Edit</a>
+              <form method="post" action="{% url 'teacher_delete' t.id %}" class="d-inline" onsubmit="return confirm('Delete this teacher?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info mb-0">No teachers found.</div>
+  {% endif %}
+</div>
+{% endblock %}
