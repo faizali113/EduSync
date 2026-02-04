@@ -1,0 +1,66 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  .portal-login-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  .portal-login-card {
+    max-width: 480px;
+    width: 100%;
+    background: var(--clr-surface);
+    border-radius: 20px;
+    padding: 36px 32px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(0,0,0,.06);
+  }
+  [data-bs-theme="dark"] .portal-login-card {
+    border-color: rgba(255,255,255,.08);
+  }
+  .portal-login-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--clr-text);
+    margin-bottom: 8px;
+  }
+  .portal-login-sub {
+    color: var(--clr-text-muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+</style>
+
+<div class="portal-login-wrap">
+  <div class="portal-login-card">
+    <div class="portal-login-title">{{ title }}</div>
+    <div class="portal-login-sub">Use the credentials created by your institution admin.</div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} mb-3" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">{{ name_label }}</label>
+        <input type="text" name="name" class="form-control" placeholder="{{ name_placeholder }}" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">{{ code_label }}</label>
+        <input type="text" name="code" class="form-control" placeholder="{{ code_placeholder }}" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

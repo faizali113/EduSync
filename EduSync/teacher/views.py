@@ -48,7 +48,8 @@ def teacher_dashboard(request):
         }
         return render(request, 'teacher/dashboard.html', context)
     except Teacher.DoesNotExist:
-        return render(request, 'teacher/dashboard.html', {'error': 'Teacher profile not found'})
+        messages.error(request, 'Teacher not found.')
+        return redirect('dashboard')
 
 
 

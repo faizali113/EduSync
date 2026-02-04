@@ -341,6 +341,7 @@
 
             <a class="es-brand" href="/">Edu<span>Sync</span></a>
 
+<<<<<<< HEAD
             {% if force_public_nav %}
             <!-- ?? PUBLIC NAVBAR (FORCED) -->
             <ul class="nav-links">
@@ -356,6 +357,20 @@
                 <a href="{% url 'signup' %}" class="btn-nav-cta">Get Started</a>
                 <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
             </div>
+=======
+        {% if force_public_nav or request.resolver_match.url_name == 'signup' or request.resolver_match.url_name == 'login' %}
+    <!-- ?? PUBLIC NAVBAR (FORCED) -->
+    <ul class="nav-links">
+        <li><a href="{% url 'landing' %}#features">Features</a></li>
+        <li><a href="{% url 'landing' %}#serve">Who We Serve</a></li>
+        <li><a href="{% url 'landing' %}#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-right">
+        <button id="themeToggle" class="btn-theme">??</button>
+        <a href="{% url 'login' %}" class="btn-nav-login">Login</a>
+        <a href="{% url 'signup' %}" class="btn-nav-cta">Get Started</a>
+    </div>
+>>>>>>> 013a5d4cc5ea4e0fdf6efed08f300b3830c03115
 
             {% elif user.is_authenticated %}
             <!-- � AUTHENTICATED NAVBAR -->

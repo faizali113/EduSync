@@ -46,7 +46,8 @@ def student_dashboard(request):
         }
         return render(request, 'student/dashboard.html', context)
     except Student.DoesNotExist:
-        return render(request, 'student/dashboard.html', {'error': 'Student profile not found'})
+        messages.error(request, 'Student not found.')
+        return redirect('dashboard')
 
 @login_required(login_url='login')
 def student_grades(request):

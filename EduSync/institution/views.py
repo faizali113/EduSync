@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 
 from .models import Institution, News
 from academics.models import Course
 from teacher.models import Teacher
+from student.models import Student
 
 
 # 🔹 INSTITUTION DASHBOARD (WELCOME PAGE)
@@ -36,7 +38,100 @@ def dashboard_view(request):
 from django.contrib import messages
 
 # 🔹 INSTITUTION ADMIN LOGIN
+<<<<<<< HEAD
 @never_cache
+=======
+
+
+
+
+
+
+
+@login_required(login_url='login')
+def teacher_portal_login(request):
+    return _handle_portal_login(request, role='teacher')
+
+
+@login_required(login_url='login')
+def student_portal_login(request):
+    return _handle_portal_login(request, role='student')
+
+
+
+def _handle_portal_login(request, role):
+    if request.method == "GET":
+        context = {
+            'role': role,
+            'title': 'Teacher Login' if role == 'teacher' else 'Student Login',
+            'name_label': 'Teacher Name' if role == 'teacher' else 'Student Name',
+            'code_label': 'Employee ID' if role == 'teacher' else 'Roll No.',
+            'name_placeholder': 'Enter teacher name' if role == 'teacher' else 'Enter student name',
+            'code_placeholder': 'Enter employee ID' if role == 'teacher' else 'Enter roll number',
+        }
+        return render(request, 'institution/portal_login.html', context)
+
+    name = " ".join((request.POST.get('name') or "").split())
+    code = (request.POST.get('code') or "").strip()
+
+    try:
+        institution = Institution.objects.get(admin=request.user)
+    except Institution.DoesNotExist:
+        messages.error(request, 'Institution not found for this account.')
+        return redirect('dashboard')
+
+    def normalize(value):
+        return " ".join((value or "").split()).lower()
+
+    if role == "teacher":
+        teacher = Teacher.objects.filter(employee_id=code, institution=institution).select_related('user').first()
+        if not teacher:
+            messages.error(request, 'Teacher not found.')
+            return redirect('teacher_portal_login')
+
+        full_name = teacher.user.get_full_name()
+        user_name = teacher.user.username
+        expected_names = {normalize(full_name), normalize(user_name)}
+        if normalize(name) not in expected_names:
+            messages.error(request, 'Teacher not found.')
+            return redirect('teacher_portal_login')
+
+        user = authenticate(request, username=teacher.user.username, password=code)
+        if user is None:
+            messages.error(request, 'Invalid teacher credentials.')
+            return redirect('teacher_portal_login')
+
+        logout(request)
+        login(request, user)
+        return redirect('teacher_dashboard')
+
+    if role == "student":
+        student = Student.objects.filter(student_id=code, institution=institution).select_related('user').first()
+        if not student:
+            messages.error(request, 'Student not found.')
+            return redirect('student_portal_login')
+
+        full_name = student.user.get_full_name()
+        user_name = student.user.username
+        expected_names = {normalize(full_name), normalize(user_name)}
+        if normalize(name) not in expected_names:
+            messages.error(request, 'Student not found.')
+            return redirect('student_portal_login')
+
+        user = authenticate(request, username=student.user.username, password=code)
+        if user is None:
+            messages.error(request, 'Invalid student credentials.')
+            return redirect('student_portal_login')
+
+        logout(request)
+        login(request, user)
+        return redirect('student_dashboard')
+
+    messages.error(request, 'Invalid login request.')
+    return redirect('dashboard')
+
+
+>>>>>>> 013a5d4cc5ea4e0fdf6efed08f300b3830c03115
 def institution_admin_login(request):
     if request.method == "POST":
         username = request.POST.get("username")
