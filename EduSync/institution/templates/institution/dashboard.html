@@ -251,6 +251,16 @@
 </div>
 {% endif %}
 
+{% if messages %}
+<div class="container dashboard-messages" style="max-width:1200px; margin-top: 16px;">
+  {% for message in messages %}
+    <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} mb-3" role="alert">
+      {{ message }}
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
 <div class="hero-section">
     <div class="welcome-badge">🎓 Institution Portal</div>
     <h1 class="hero-title">
@@ -323,7 +333,7 @@
                     </div>
                 </div>
 
-                <a href="{% url 'student_dashboard' %}" class="btn-panel">
+                <a href="{% url 'student_portal_login' %}" class="btn-panel">
                     Access Student Panel →
                 </a>
             </div>
@@ -356,7 +366,7 @@
                     </div>
                 </div>
 
-                <a href="#" class="btn-panel">
+                <a href="{% url 'teacher_portal_login' %}" class="btn-panel">
                     Access Teacher Panel →
                 </a>
             </div>
@@ -423,6 +433,68 @@
     </div>
 </div>
 {% endif %}
+
+
+
+<!-- Teacher Login Modal -->
+<div class="modal fade" id="teacherLoginModal" tabindex="-1" aria-labelledby="teacherLoginLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="border-radius: 16px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="teacherLoginLabel">Teacher Login</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="post" action="">
+        {% csrf_token %}
+        <input type="hidden" name="role" value="teacher">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Teacher Name</label>
+            <input type="text" name="name" class="form-control" placeholder="Enter teacher name" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Employee ID</label>
+            <input type="text" name="code" class="form-control" placeholder="Enter employee ID" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Student Login Modal -->
+<div class="modal fade" id="studentLoginModal" tabindex="-1" aria-labelledby="studentLoginLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="border-radius: 16px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="studentLoginLabel">Student Login</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="post" action="">
+        {% csrf_token %}
+        <input type="hidden" name="role" value="student">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Student Name</label>
+            <input type="text" name="name" class="form-control" placeholder="Enter student name" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Roll No.</label>
+            <input type="text" name="code" class="form-control" placeholder="Enter roll number" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <script>
   // Add click ripple effect

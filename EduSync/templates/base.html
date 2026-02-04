@@ -196,7 +196,7 @@
 
         <a class="es-brand" href="/">Edu<span>Sync</span></a>
 
-        {% if force_public_nav %}
+        {% if force_public_nav or request.resolver_match.url_name == 'signup' or request.resolver_match.url_name == 'login' %}
     <!-- ?? PUBLIC NAVBAR (FORCED) -->
     <ul class="nav-links">
         <li><a href="{% url 'landing' %}#features">Features</a></li>
