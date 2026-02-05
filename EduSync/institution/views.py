@@ -14,6 +14,14 @@ from student.models import Student
 @never_cache
 @login_required(login_url='login')
 def dashboard_view(request):
+    # 🛡️ ROLE CHECK: Redirect non-admins to their respective dashboards
+    if hasattr(request.user, 'userprofile'):
+        role = request.user.userprofile.role
+        if role == 'student':
+            return redirect('student_dashboard')
+        elif role == 'teacher':
+            return redirect('teacher_dashboard')
+
     try:
         institution = Institution.objects.get(admin=request.user)
     except Institution.DoesNotExist:
@@ -28,21 +36,11 @@ def dashboard_view(request):
         'user': request.user,
         'news_list': news_list,
         'courses': courses,
-        'teachers': teachers,          # ✅ NEWS PASSED HERE
+        'teachers': teachers,
         'show_dashboard_nav': True,
     }
 
     return render(request, 'institution/dashboard.html', context)
-
-
-from django.contrib import messages
-
-
-
-
-
-
-
 
 
 @login_required(login_url='login')

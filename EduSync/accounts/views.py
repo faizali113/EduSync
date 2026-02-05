@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.cache import never_cache
-from .models import UserProfile, LoginTable
+from .models import UserProfile, LoginTable, SignupTable
 from institution.models import Institution
 from django.contrib import messages
 
@@ -29,7 +29,7 @@ def login_view(request):
             return redirect('dashboard')
 
     if request.method == 'POST':
-        from .models import SignupTable
+
         institution_name = request.POST.get('institution_name')
         password = request.POST.get('password')
         
@@ -83,7 +83,7 @@ def signup_view(request):
          return redirect('dashboard')
 
     if request.method == 'POST':
-        from .models import SignupTable
+
         institution_name = request.POST.get('institution')
         username = request.POST.get('username')
         email = request.POST.get('email')

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.db import IntegrityError
 from .models import Course, Grade
 from .forms import CourseForm
 from institution.models import Institution
@@ -35,8 +36,6 @@ def course_detail(request, course_id):
     context = {'course': course, 'grades': grades}
     return render(request, 'academics/course_detail.html', context)
 
-
-from django.db import IntegrityError
 
 @login_required(login_url='login')
 def course_create(request):

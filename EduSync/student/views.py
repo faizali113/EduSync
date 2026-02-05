@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Student
@@ -82,7 +83,7 @@ def student_create(request):
         if form.is_valid():
             try:
                 with transaction.atomic():
-                    from django.contrib.auth.models import User
+
                     full_name = form.cleaned_data['name'].strip()
                     parts = full_name.split(None, 1)
                     first_name = parts[0] if parts else full_name
