@@ -1,296 +1,276 @@
-
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
 
 <style>
- body {
-  min-height: 100vh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-/* 🌈 THEME AWARE BACKGROUND */
-.signup-container {
-  background: linear-gradient(135deg, var(--clr-bg) 0%, var(--clr-surface-alt) 100%);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-}
-
-/* 🧊 CARD */
-.signup-card {
-  background: var(--clr-surface);
-  border-radius: 24px;
-  padding: 50px 45px;
-  box-shadow: var(--shadow-md);
-  border: 1px solid rgba(0,0,0,.06);
-  max-width: 480px;
-  width: 100%;
-  backdrop-filter: blur(10px);
-  animation: slideUp 0.6s ease-out;
-}
-
-[data-bs-theme="dark"] .signup-card {
-  border-color: rgba(255,255,255,.08);
-}
-
-@media (max-width: 576px) {
-  .signup-card {
-    padding: 30px 25px;
-    margin: 0 15px;
+  .auth-wrapper {
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem 1rem;
   }
-}
 
-/* ✨ ENTRY ANIMATION */
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+  .auth-bg-blob {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: var(--clr-accent);
+    filter: blur(140px);
+    opacity: 0.15;
+    border-radius: 50%;
+    z-index: -1;
+  }
 
-/* 🧠 LOGO SECTION */
-.logo-section { text-align: center; margin-bottom: 40px; }
+  .blob-l {
+    top: -100px;
+    left: -100px;
+    background: var(--clr-accent);
+  }
 
-.logo-text {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--clr-text);
-  letter-spacing: -0.5px;
-}
+  .blob-r {
+    bottom: -100px;
+    right: -100px;
+    background: var(--clr-success);
+    opacity: 0.1;
+  }
 
-.logo-text .highlight { color: var(--clr-accent); }
+  .auth-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--clr-surface-alt);
+    padding: 3rem 2.5rem;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 500px;
+    /* Slightly wider for signup */
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
 
-.tagline {
-  color: var(--clr-accent);
-  font-size: 13px;
-  font-weight: 500;
-  margin-top: 8px;
-  letter-spacing: 0.5px;
-}
+  [data-bs-theme="dark"] .auth-card {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.05);
+  }
 
-/* FORM TITLE */
-.form-title {
-  color: var(--clr-text);
-  font-size: 28px;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 35px;
-  letter-spacing: -0.5px;
-}
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
 
-.form-group { margin-bottom: 20px; }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
-/* ⌨️ INPUTS */
-.form-control {
-  background: var(--clr-surface-alt);
-  border: 1px solid rgba(0,0,0,.08);
-  border-radius: 12px;
-  padding: 15px 20px;
-  color: var(--clr-text);
-  font-size: 15px;
-  transition: all 0.3s ease;
-}
+  .auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
 
-[data-bs-theme="dark"] .form-control {
-  border-color: rgba(255,255,255,.1);
-}
+  .auth-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+  }
 
-.form-control:focus {
-  border-color: var(--clr-accent);
-  box-shadow: 0 0 0 3px var(--clr-accent-soft);
-  outline: none;
-}
+  .auth-sub {
+    font-size: 0.95rem;
+    color: var(--clr-text-muted);
+  }
 
-.form-control::placeholder {
-  color: var(--clr-text-muted);
-}
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
 
-/* 🔴 BUTTON */
-.btn-signup {
-  background: var(--clr-accent);
-  border: none;
-  border-radius: 12px;
-  padding: 15px;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 600;
-  width: 100%;
-  margin-top: 25px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(232,83,63,.25);
-}
+  .form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--clr-text);
+    margin-bottom: 0.4rem;
+    display: block;
+  }
 
-.btn-signup:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(232,83,63,.35);
-  background: var(--clr-accent-hover);
-}
+  .form-control {
+    background: var(--clr-bg);
+    border: 1px solid var(--clr-border);
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    width: 100%;
+    color: var(--clr-text);
+  }
 
-/* LINKS */
-.login-link {
-  text-align: center;
-  margin-top: 25px;
-  color: var(--clr-text-muted);
-  font-size: 14px;
-}
+  .form-control:focus {
+    outline: none;
+    border-color: var(--clr-accent);
+    box-shadow: 0 0 0 4px var(--clr-accent-soft);
+    background: var(--clr-surface);
+  }
 
-.login-link a {
-  color: var(--clr-accent);
-  text-decoration: none;
-  font-weight: 600;
-}
+  .btn-auth {
+    width: 100%;
+    padding: 0.9rem;
+    background: var(--clr-accent);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s;
+    margin-top: 1rem;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    cursor: pointer;
+  }
 
-.login-link a:hover {
-  color: var(--clr-accent-hover);
-  text-decoration: underline;
-}
+  .btn-auth:hover {
+    background: var(--clr-accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+  }
 
-/* 🧩 ICONS */
-.input-group { position: relative; }
+  .btn-auth:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 
-.input-icon {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--clr-text-muted);
-  pointer-events: none;
-  z-index: 1;
-}
+  .auth-footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: var(--clr-text-muted);
+  }
 
-.form-control.with-icon { padding-left: 50px; }
+  .auth-footer a {
+    color: var(--clr-accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
 
-/* ALERT ANIMATION */
-.alert-custom {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
-  min-width: 300px;
-  animation: slideInRight 0.4s ease-out;
-}
+  .auth-footer a:hover {
+    text-decoration: underline;
+  }
 
-@keyframes slideInRight {
-  from { opacity: 0; transform: translateX(100px); }
-  to { opacity: 1; transform: translateX(0); }
-}
+  .back-btn {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    color: var(--clr-text-muted);
+    transition: 0.2s;
+    text-decoration: none;
+  }
 
+  .back-btn:hover {
+    color: var(--clr-accent);
+    border-color: var(--clr-accent);
+  }
+
+  /* Input Icon Wrapper */
+  .input-wrapper {
+    position: relative;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--clr-text-muted);
+    font-size: 1rem;
+    pointer-events: none;
+  }
+
+  .form-control.has-icon {
+    padding-left: 2.8rem;
+  }
 </style>
 
-<div class="signup-container">
-  <div class="signup-card">
-    <div class="logo-section">
-      <div class="logo-text">
-        Edu<span class="highlight">Sync</span>
-      </div>
-      <div class="tagline">Academic Management, Reimagined</div>
-    </div>
+<div class="auth-wrapper">
+  <div class="auth-bg-blob blob-l"></div>
+  <div class="auth-bg-blob blob-r"></div>
 
-    <h3 class="form-title">Create Your Account</h3>
+  <div class="auth-card">
+    <a href="/" class="back-btn" title="Back to Home">←</a>
+
+    <div class="auth-header">
+      <h1 class="auth-title">Get Started</h1>
+      <p class="auth-sub">Create your institution account in seconds.</p>
+    </div>
 
     <form method="post" id="signupForm">
       {% csrf_token %}
-      
+
       <div class="form-group">
-        <div class="input-group">
+        <label class="form-label">Institution Name</label>
+        <div class="input-wrapper">
           <span class="input-icon">🏫</span>
-          <input 
-            type="text" 
-            name="institution" 
-            class="form-control with-icon" 
-            placeholder="Institution Name" 
-            required
-          >
+          <input type="text" name="institution" class="form-control has-icon" placeholder="e.g. Lincoln High School"
+            required>
         </div>
       </div>
 
       <div class="form-group">
-        <div class="input-group">
+        <label class="form-label">Admin Username</label>
+        <div class="input-wrapper">
           <span class="input-icon">👤</span>
-          <input 
-            type="text" 
-            name="username" 
-            class="form-control with-icon" 
-            placeholder="Username" 
-            required
-          >
+          <input type="text" name="username" class="form-control has-icon" placeholder="admin_user" required>
         </div>
       </div>
 
       <div class="form-group">
-        <div class="input-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-wrapper">
           <span class="input-icon">📧</span>
-          <input 
-            type="email" 
-            name="email" 
-            class="form-control with-icon" 
-            placeholder="Email Address" 
-            required
-          >
+          <input type="email" name="email" class="form-control has-icon" placeholder="admin@school.edu" required>
         </div>
       </div>
 
       <div class="form-group">
-        <div class="input-group">
+        <label class="form-label">Password</label>
+        <div class="input-wrapper">
           <span class="input-icon">🔒</span>
-          <input 
-            type="password" 
-            name="password" 
-            class="form-control with-icon" 
-            placeholder="Password" 
-            required
-          >
+          <input type="password" name="password" class="form-control has-icon" placeholder="Create a strong password"
+            required>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-signup">
-        Create Account
-      </button>
+      <button type="submit" class="btn-auth">Create Account</button>
     </form>
 
-    <div class="login-link">
-      Already have an account? <a href="{% url 'login' %}">Login here</a>
+    <div class="auth-footer">
+      Already registered? <a href="{% url 'login' %}">Sign in instead</a>
     </div>
   </div>
 </div>
 
 <script src="{% static 'js/alerts.js' %}"></script>
 {% if error %}
-  <script>
-    showErrorAlert("{{ error }}");
-  </script>
-{% endif %}
-{% if success %}
-  <script>
-    showSuccessAlert("{{ success }}");
-    setTimeout(function() {
-      window.location.href = "{% url redirect %}";
-    }, 2000);
-  </script>
+<script>showErrorAlert("{{ error }}");</script>
 {% endif %}
 
 <script>
-  // Add smooth form validation feedback
-  document.getElementById('signupForm').addEventListener('submit', function(e) {
-    const button = this.querySelector('.btn-signup');
-    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating Account...';
-    button.disabled = true;
-  });
-
-  // Input focus animations
-  document.querySelectorAll('.form-control').forEach(input => {
-    input.addEventListener('focus', function() {
-      this.parentElement.style.transform = 'scale(1.01)';
-      this.parentElement.style.transition = 'transform 0.2s ease';
-    });
-    
-    input.addEventListener('blur', function() {
-      this.parentElement.style.transform = 'scale(1)';
-    });
+  document.getElementById('signupForm').addEventListener('submit', function (e) {
+    const btn = this.querySelector('.btn-auth');
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Creating...';
+    btn.disabled = true;
   });
 </script>
 
 {% endblock %}
-

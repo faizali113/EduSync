@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Student
 from academics.models import Grade
 from institution.models import Institution
 from accounts.models import UserProfile
+from django.db import transaction, IntegrityError
 from .forms import StudentCreateForm, StudentEditForm
 
 
@@ -79,35 +81,47 @@ def student_create(request):
     if request.method == 'POST':
         form = StudentCreateForm(request.POST, institution=institution)
         if form.is_valid():
-            from django.contrib.auth.models import User
-            full_name = form.cleaned_data['name'].strip()
-            parts = full_name.split(None, 1)
-            first_name = parts[0] if parts else full_name
-            last_name = parts[1] if len(parts) > 1 else ""
-            student_id = form.cleaned_data['student_id']
-            username = _unique_username(f"student_{student_id}")
-            password = student_id
+            try:
+                with transaction.atomic():
 
-            user = User.objects.create_user(username=username, password=password)
-            user.first_name = first_name
-            user.last_name = last_name
-            user.save()
+                    full_name = form.cleaned_data['name'].strip()
+                    parts = full_name.split(None, 1)
+                    first_name = parts[0] if parts else full_name
+                    last_name = parts[1] if len(parts) > 1 else ""
+                    student_id = form.cleaned_data['student_id']
+                    username = _unique_username(f"student_{student_id}")
+                    password = student_id
 
-            student = Student.objects.create(
-                user=user,
-                institution=institution,
-                student_id=student_id,
-                academic_year=form.cleaned_data.get('academic_year', ''),
-                course=form.cleaned_data.get('course'),
-            )
+                    user = User.objects.create_user(username=username, password=password)
+                    user.first_name = first_name
+                    user.last_name = last_name
+                    user.save()
 
-            UserProfile.objects.create(
-                user=student.user,
-                role='student',
-                institution=institution.name
-            )
-            messages.success(request, 'Student added successfully.')
-            return redirect('student_list')
+                    student = Student.objects.create(
+                        user=user,
+                        institution=institution,
+                        student_id=student_id,
+                        academic_year=form.cleaned_data.get('academic_year', ''),
+                        gender=form.cleaned_data['gender'],
+                        date_of_birth=form.cleaned_data.get('date_of_birth'),
+                        address=form.cleaned_data.get('address', ''),
+                        parent_name=form.cleaned_data.get('parent_name', ''),
+                        parent_phone=form.cleaned_data.get('parent_phone', ''),
+                        blood_group=form.cleaned_data.get('blood_group', ''),
+                        course=form.cleaned_data.get('course'),
+                    )
+
+                    UserProfile.objects.create(
+                        user=student.user,
+                        role='student',
+                        institution=institution.name
+                    )
+                messages.success(request, 'Student added successfully.')
+                return redirect('student_list')
+            except IntegrityError as e:
+                messages.error(request, f'Database error: One of the unique fields (like Roll No) might already exist. ({e})')
+            except Exception as e:
+                messages.error(request, f'An unexpected error occurred: {e}')
     else:
         form = StudentCreateForm(institution=institution)
 
@@ -133,6 +147,12 @@ def student_edit(request, student_id):
 
             student.student_id = form.cleaned_data['student_id']
             student.academic_year = form.cleaned_data.get('academic_year', '')
+            student.gender = form.cleaned_data['gender']
+            student.date_of_birth = form.cleaned_data.get('date_of_birth')
+            student.address = form.cleaned_data.get('address', '')
+            student.parent_name = form.cleaned_data.get('parent_name', '')
+            student.parent_phone = form.cleaned_data.get('parent_phone', '')
+            student.blood_group = form.cleaned_data.get('blood_group', '')
             student.course = form.cleaned_data.get('course')
             student.save()
 

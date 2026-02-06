@@ -2,464 +2,490 @@
 {% block content %}
 
 <style>
- body {
-  min-height: 100vh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
+  body {
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
 
-/* 🌈 PAGE BACKGROUND */
-.portal-wrapper {
-  background: linear-gradient(135deg, var(--clr-bg) 0%, var(--clr-surface-alt) 100%);
-  min-height: 100vh;
-}
+  /* 🌈 PAGE BACKGROUND */
+  .portal-wrapper {
+    background: linear-gradient(135deg, var(--clr-bg) 0%, var(--clr-surface-alt) 100%);
+    min-height: 100vh;
+  }
 
-/* 📰 NEWS TICKER */
-.news-ticker {
-  background: var(--clr-surface);
-  border-bottom: 2px solid var(--clr-accent);
-  padding: 12px 0;
-  box-shadow: var(--shadow-sm);
-}
+  /* 📰 NEWS TICKER */
+  .news-ticker {
+    background: var(--clr-surface);
+    border-bottom: 2px solid var(--clr-accent);
+    padding: 12px 0;
+    box-shadow: var(--shadow-sm);
+  }
 
-.news-ticker marquee {
-  color: var(--clr-text);
-  font-size: 14px;
-}
+  .news-ticker marquee {
+    color: var(--clr-text);
+    font-size: 14px;
+  }
 
-/* HERO */
-.hero-section {
-  text-align: center;
-  padding: 60px 20px 50px;
-  animation: fadeInDown .8s ease-out;
-}
+  /* HERO */
+  .hero-section {
+    text-align: center;
+    padding: 60px 20px 50px;
+    animation: fadeInDown .8s ease-out;
+  }
 
-.welcome-badge {
-  background: var(--clr-accent);
-  color: #fff;
-  padding: 10px 25px;
-  border-radius: 25px;
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  display:inline-block;
-}
+  .welcome-badge {
+    background: var(--clr-accent);
+    color: #fff;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: inline-block;
+  }
 
-.hero-title {
-  color: var(--clr-text);
-  font-size: 48px;
-  font-weight: 700;
-}
+  .hero-title {
+    color: var(--clr-text);
+    font-size: 48px;
+    font-weight: 700;
+  }
 
-.hero-title .institution-name {
-  color: var(--clr-accent);
-}
+  .hero-title .institution-name {
+    color: var(--clr-accent);
+  }
 
-.hero-subtitle {
-  color: var(--clr-text-muted);
-  font-size: 18px;
-  max-width: 600px;
-  margin: 0 auto;
-}
+  .hero-subtitle {
+    color: var(--clr-text-muted);
+    font-size: 18px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
 
-/* PANELS GRID */
-.panels-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px 80px;
-}
+  /* PANELS GRID */
+  .panels-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
 
-/* 🧊 PANEL CARD */
-.panel-card {
-  background: var(--clr-surface);
-  border-radius: 20px;
-  padding: 40px 30px;
-  box-shadow: var(--shadow-md);
-  border: 1px solid rgba(0,0,0,.06);
-  backdrop-filter: blur(10px);
-  transition: .4s cubic-bezier(.4,0,.2,1);
-  text-align: center;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  animation: slideUp .6s ease-out both;
-}
+  /* 🧊 PANEL CARD */
+  .panel-card {
+    background: var(--clr-surface);
+    border-radius: 20px;
+    padding: 40px 30px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(0, 0, 0, .06);
+    backdrop-filter: blur(10px);
+    transition: .4s cubic-bezier(.4, 0, .2, 1);
+    text-align: center;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    animation: slideUp .6s ease-out both;
+  }
 
-[data-bs-theme="dark"] .panel-card {
-  border-color: rgba(255,255,255,.08);
-}
+  [data-bs-theme="dark"] .panel-card {
+    border-color: rgba(255, 255, 255, .08);
+  }
 
-.panel-card:hover {
-  transform: none;
-}
+  .panel-card:hover {
+    transform: none;
+  }
 
-/* Accent themes */
-.panel-card.admin-panel   { --accent-color: var(--clr-accent); }
-.panel-card.student-panel { --accent-color: var(--clr-green); }
-.panel-card.teacher-panel { --accent-color: var(--clr-gold); }
+  /* Accent themes */
+  .panel-card.admin-panel {
+    --accent-color: var(--clr-accent);
+  }
 
-/* Accent top glow */
-.panel-card::before {
-  content:'';
-  position:absolute;
-  top:0; left:0; right:0;
-  height:4px;
-  background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
-  opacity:0;
-  transition:.3s;
-}
+  .panel-card.student-panel {
+    --accent-color: var(--clr-green);
+  }
 
-.panel-card:hover::before { opacity:1; }
+  .panel-card.teacher-panel {
+    --accent-color: var(--clr-gold);
+  }
 
-/* ICON CIRCLE */
-.panel-icon-container {
-  width:100px; height:100px;
-  margin:0 auto 25px;
-  background: var(--clr-surface-alt);
-  border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-}
+  /* Accent top glow */
+  .panel-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+    opacity: 0;
+    transition: .3s;
+  }
 
-.panel-icon { font-size:50px; }
+  .panel-card:hover::before {
+    opacity: 1;
+  }
 
-/* TEXT */
-.panel-title { color: var(--clr-text); font-size:26px; font-weight:700; }
-.panel-description { color: var(--clr-text-muted); font-size:15px; }
+  /* ICON CIRCLE */
+  .panel-icon-container {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 25px;
+    background: var(--clr-surface-alt);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-.panel-stats {
-  display:inline-block;
-  background: var(--clr-surface-alt);
-  padding:8px 16px;
-  border-radius:20px;
-  font-size:13px;
-  color: var(--clr-text-muted);
-}
+  .panel-icon {
+    font-size: 50px;
+  }
 
-/* FEATURES */
-.panel-features {
-  text-align:left;
-  margin:25px 0;
-  padding:0 20px;
-}
+  /* TEXT */
+  .panel-title {
+    color: var(--clr-text);
+    font-size: 26px;
+    font-weight: 700;
+  }
 
-.feature-item {
-  display:flex;
-  align-items:center;
-  margin-bottom:10px;
-  color: var(--clr-text-muted);
-  font-size:14px;
-}
+  .panel-description {
+    color: var(--clr-text-muted);
+    font-size: 15px;
+  }
 
-.feature-icon {
-  width:24px; height:24px;
-  background: var(--accent-color);
-  border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  margin-right:12px;
-  font-size:12px;
-  color:#fff;
-}
+  .panel-stats {
+    display: inline-block;
+    background: var(--clr-surface-alt);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--clr-text-muted);
+  }
 
-/* BUTTON */
-.btn-panel {
-  background: var(--accent-color);
-  border:none;
-  border-radius:12px;
-  padding:14px 32px;
-  color:#fff;
-  font-weight:600;
-  text-decoration:none;
-  display:inline-block;
-}
+  /* FEATURES */
+  .panel-features {
+    text-align: left;
+    margin: 25px 0;
+    padding: 0 20px;
+  }
 
-.btn-panel:hover { filter:brightness(1.1); }
+  .feature-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    color: var(--clr-text-muted);
+    font-size: 14px;
+  }
 
-/* ANIMATIONS */
-@keyframes fadeInDown { from{opacity:0;transform:translateY(-30px);} to{opacity:1;} }
-@keyframes slideUp { from{opacity:0;transform:translateY(40px);} to{opacity:1;} }
+  .feature-icon {
+    width: 24px;
+    height: 24px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-size: 12px;
+    color: #fff;
+  }
 
-/* RESPONSIVE */
-@media (max-width:768px){
-  .hero-title{font-size:32px;}
-  .panel-card{padding:30px 25px;}
-}
+  /* BUTTON */
+  .btn-panel {
+    background: var(--accent-color);
+    border: none;
+    border-radius: 12px;
+    padding: 14px 32px;
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+  }
 
+  .btn-panel:hover {
+    filter: brightness(1.1);
+  }
 
-/* Chevron for collapsible courses */
-.course-toggle {
-  width: 100%;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-.chevron {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--clr-surface-alt);
-  transition: transform .25s ease;
-  font-size: 12px;
-  color: var(--clr-text);
-}
-.course-toggle[aria-expanded="true"] .chevron {
-  transform: rotate(180deg);
-}
+  /* ANIMATIONS */
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
 
+    to {
+      opacity: 1;
+    }
+  }
 
-.course-list { display:flex; flex-direction:column; gap:14px; }
-.course-item {
-  background: var(--clr-surface-alt);
-  border-radius: 16px;
-  padding: 16px 18px;
-  border: 1px solid rgba(0,0,0,.05);
-}
-.course-title { display:flex; flex-direction:column; gap:4px; }
-.course-name { font-size: 18px; font-weight: 700; color: var(--clr-text); }
-.course-meta { font-size: 13px; color: var(--clr-text-muted); }
-.course-body { padding-top: 6px; }
-.teacher-photo {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--clr-accent);
-  margin-bottom: 6px;
-}
-.teacher-card {
-  background: var(--clr-surface);
-  border-radius: 14px;
-  padding: 14px 16px;
-  border: 1px solid rgba(0,0,0,.06);
-}
-.teacher-name { font-weight: 600; color: var(--clr-text); margin-bottom: 2px; }
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
 
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width:768px) {
+    .hero-title {
+      font-size: 32px;
+    }
+
+    .panel-card {
+      padding: 30px 25px;
+    }
+  }
 
 
+  /* Chevron for collapsible courses */
+  .course-toggle {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--clr-surface-alt);
+    transition: transform .25s ease;
+    font-size: 12px;
+    color: var(--clr-text);
+  }
+
+  .course-toggle[aria-expanded="true"] .chevron {
+    transform: rotate(180deg);
+  }
+
+
+  .course-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .course-item {
+    background: var(--clr-surface-alt);
+    border-radius: 16px;
+    padding: 16px 18px;
+    border: 1px solid rgba(0, 0, 0, .05);
+  }
+
+  .course-title {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .course-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--clr-text);
+  }
+
+  .course-meta {
+    font-size: 13px;
+    color: var(--clr-text-muted);
+  }
+
+  .course-body {
+    padding-top: 6px;
+  }
+
+  .teacher-photo {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--clr-accent);
+    margin-bottom: 6px;
+  }
+
+  .teacher-card {
+    background: var(--clr-surface);
+    border-radius: 14px;
+    padding: 14px 16px;
+    border: 1px solid rgba(0, 0, 0, .06);
+  }
+
+  .teacher-name {
+    font-weight: 600;
+    color: var(--clr-text);
+    margin-bottom: 2px;
+  }
 </style>
 
 {% if news_list %}
 <div class="news-ticker">
-    <marquee direction="left" scrollamount="6">
-        {% for n in news_list %}
-            🔔 {{ n.content }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        {% endfor %}
-    </marquee>
+  <marquee direction="left" scrollamount="6">
+    {% for n in news_list %}
+    🔔 {{ n.content }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {% endfor %}
+  </marquee>
 </div>
 {% endif %}
 
 {% if messages %}
 <div class="container dashboard-messages" style="max-width:1200px; margin-top: 16px;">
   {% for message in messages %}
-    <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} mb-3" role="alert">
-      {{ message }}
-    </div>
+  <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} mb-3"
+    role="alert">
+    {{ message }}
+  </div>
   {% endfor %}
 </div>
 {% endif %}
 
 <div class="hero-section">
-    <div class="welcome-badge">🎓 Institution Portal</div>
-    <h1 class="hero-title">
-        Welcome, <span class="institution-name">{{ institution.name }}</span>
-    </h1>
-    <p class="hero-subtitle">
-        Access your institution's management panels and streamline your operations
-    </p>
+  <div class="welcome-badge">🎓 Institution Portal</div>
+  <h1 class="hero-title">
+    Welcome, <span class="institution-name">{{ institution.name }}</span>
+  </h1>
+  <p class="hero-subtitle">
+    Access your institution's management panels and streamline your operations
+  </p>
 </div>
 
 <div class="panels-container">
-    <div class="row g-5">
-        <!-- Admin Panel -->
-        <div class="col-lg-4 col-md-6">
-            <div class="panel-card admin-panel">
-                <div class="panel-icon-container">
-                    <div class="panel-icon">⚙️</div>
-                </div>
-                <h5 class="panel-title">Admin Panel</h5>
-                <div class="panel-stats">🔐 Full Access Control</div>
-                <p class="panel-description">
-                    Manage institution settings, users, and system configurations
-                </p>
-                
-                <div class="panel-features">
-                    <div class="feature-item">
-                        <div class="feature-icon">✓</div>
-                        <span>Institution settings</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">✓</div>
-                        <span>News management</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">✓</div>
-                        <span>User administration</span>
-                    </div>
-                </div>
+  <div class="row g-5">
+    <!-- Admin Panel -->
+    <div class="col-lg-4 col-md-6">
+      <div class="panel-card admin-panel">
+        <div class="panel-icon-container">
+          <div class="panel-icon">⚙️</div>
+        </div>
+        <h5 class="panel-title">Admin Panel</h5>
+        <div class="panel-stats">🔐 Full Access Control</div>
+        <p class="panel-description">
+          Manage institution settings, users, and system configurations
+        </p>
 
-                <a href="{% url 'institution_admin_login' %}" class="btn-panel">
-                    Access Admin Panel →
-                </a>
-            </div>
+        <div class="panel-features">
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>Institution settings</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>News management</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>User administration</span>
+          </div>
         </div>
 
-        <!-- Student Panel -->
-        <div class="col-lg-4 col-md-6">
-            <div class="panel-card student-panel">
-                <div class="panel-icon-container">
-                    <div class="panel-icon">🎓</div>
-                </div>
-                <h5 class="panel-title">Student Panel</h5>
-                <div class="panel-stats">👨‍🎓 Student Management</div>
-                <p class="panel-description">
-                    Manage student records, enrollment, and academic progress
-                </p>
-                
-                <div class="panel-features">
-                    <div class="feature-item">
-                        <div class="feature-icon">✓</div>
-                        <span>Student records</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">✓</div>
-                        <span>Enrollment tracking</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">✓</div>
-                        <span>Academic reports</span>
-                    </div>
-                </div>
-
-                <a href="{% url 'student_portal_login' %}" class="btn-panel">
-                    Access Student Panel →
-                </a>
-            </div>
-        </div>
-
-        <!-- Teacher Panel -->
-        <div class="col-lg-4 col-md-6">
-            <div class="panel-card teacher-panel">
-                <div class="panel-icon-container">
-                    <div class="panel-icon">👨‍🏫</div>
-                </div>
-                <h5 class="panel-title">Teacher Panel</h5>
-                <div class="panel-stats">👩‍🏫 Faculty Management</div>
-                <p class="panel-description">
-                    Manage teacher profiles, assignments, and performance data
-                </p>
-                
-                <div class="panel-features">
-                    <div class="feature-item">
-                        <div class="feature-icon">✓</div>
-                        <span>Teacher profiles</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">✓</div>
-                        <span>Class assignments</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">✓</div>
-                        <span>Performance tracking</span>
-                    </div>
-                </div>
-
-                <a href="{% url 'teacher_portal_login' %}" class="btn-panel">
-                    Access Teacher Panel →
-                </a>
-            </div>
-        </div>
+        <a href="{% url 'institution_admin_login' %}" class="btn-panel">
+          Access Admin Panel →
+        </a>
+      </div>
     </div>
 
-
-{% if courses %}
-<div id="course-overview" class="panels-container" style="padding-top: 0;">
-    <div class="row g-5">
-        <div class="col-12">
-            <div class="panel-card admin-panel" style="text-align:left;">
-                <h4 class="panel-title" style="margin-bottom:12px;">Courses</h4>
-                <p class="panel-description" style="margin-bottom:20px;">Click a course to view details and teachers.</p>
-
-                <div class="course-list">
-                    {% for course in courses %}
-                    <div class="course-item">
-                        <button class="btn btn-link p-0 course-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#course-{{ course.id }}" aria-expanded="false" aria-controls="course-{{ course.id }}" style="text-decoration:none; color: var(--clr-text); font-weight:600;">
-                            <span class="course-title">
-                                <span class="course-name">{{ course.name }}</span>
-                                <span class="course-meta">{{ course.code }} | Credits: {{ course.credits }}</span>
-                            </span>
-                            <span class="chevron">&#9660;</span>
-                        </button>
-
-                        <div id="course-{{ course.id }}" class="collapse mt-3">
-                            <div class="course-body">
-                                {% if course.description %}
-                                <p class="panel-description">{{ course.description }}</p>
-                                {% else %}
-                                <p class="panel-description">No description provided.</p>
-                                {% endif %}
-
-                                <div class="panel-stats" style="margin:16px 0 10px;">Teachers</div>
-                                {% if course.teachers.all %}
-                                <div class="row g-2">
-                                    {% for t in course.teachers.all %}
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="teacher-card">
-                                            {% if t.photo %}
-                                            <img class="teacher-photo" src="{{ t.photo.url }}" alt="{{ t.user.get_full_name|default:t.user.username }}">
-                                            {% endif %}
-                                            <div class="teacher-name">{{ t.user.get_full_name|default:t.user.username }}</div>
-                                            
-                                            <div class="panel-description">{{ t.qualification }}</div>
-                                            {% if t.phone %}
-                                            <div class="panel-description">{{ t.phone }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                                {% else %}
-                                    <div class="panel-description">No teachers assigned.</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
+    <!-- Student Panel -->
+    <div class="col-lg-4 col-md-6">
+      <div class="panel-card student-panel">
+        <div class="panel-icon-container">
+          <div class="panel-icon">🎓</div>
         </div>
+        <h5 class="panel-title">Student Panel</h5>
+        <div class="panel-stats">👨‍🎓 Student Management</div>
+        <p class="panel-description">
+          Manage student records, enrollment, and academic progress
+        </p>
+
+        <div class="panel-features">
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>Student records</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>Enrollment tracking</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>Academic reports</span>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-panel w-100" data-bs-toggle="modal" data-bs-target="#studentLoginModal">
+          Access Student Panel →
+        </button>
+      </div>
     </div>
+
+    <!-- Teacher Panel -->
+    <div class="col-lg-4 col-md-6">
+      <div class="panel-card teacher-panel">
+        <div class="panel-icon-container">
+          <div class="panel-icon">👨‍🏫</div>
+        </div>
+        <h5 class="panel-title">Teacher Panel</h5>
+        <div class="panel-stats">👩‍🏫 Faculty Management</div>
+        <p class="panel-description">
+          Manage teacher profiles, assignments, and performance data
+        </p>
+
+        <div class="panel-features">
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>Teacher profiles</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>Class assignments</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>Performance tracking</span>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-panel w-100" data-bs-toggle="modal" data-bs-target="#teacherLoginModal">
+          Access Teacher Panel →
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
-{% endif %}
-
-
 
 <!-- Teacher Login Modal -->
 <div class="modal fade" id="teacherLoginModal" tabindex="-1" aria-labelledby="teacherLoginLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content" style="border-radius: 16px;">
-      <div class="modal-header">
-        <h5 class="modal-title" id="teacherLoginLabel">Teacher Login</h5>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: var(--shadow-lg);">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold" id="teacherLoginLabel">👨‍🏫 Teacher Portal Login</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form method="post" action="">
+      <form method="post" action="{% url 'teacher_portal_login' %}">
         {% csrf_token %}
         <input type="hidden" name="role" value="teacher">
-        <div class="modal-body">
+        <div class="modal-body py-4">
           <div class="mb-3">
-            <label class="form-label">Teacher Name</label>
-            <input type="text" name="name" class="form-control" placeholder="Enter teacher name" required>
+            <label class="form-label fw-600">Full Name / Username</label>
+            <input type="text" name="name" class="form-control" style="border-radius: 10px; padding: 12px;"
+              placeholder="Enter your full name or username" required>
           </div>
           <div class="mb-3">
-            <label class="form-label">Employee ID</label>
-            <input type="text" name="code" class="form-control" placeholder="Enter employee ID" required>
+            <label class="form-label fw-600">Employee ID (Password)</label>
+            <input type="password" name="code" class="form-control" style="border-radius: 10px; padding: 12px;"
+              placeholder="Enter your employee ID" required>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Login</button>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+            style="border-radius: 10px;">Cancel</button>
+          <button type="submit" class="btn btn-primary"
+            style="background: var(--clr-gold); border: none; border-radius: 10px; padding: 10px 24px;">Login to
+            Portal</button>
         </div>
       </form>
     </div>
@@ -468,28 +494,33 @@
 
 <!-- Student Login Modal -->
 <div class="modal fade" id="studentLoginModal" tabindex="-1" aria-labelledby="studentLoginLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content" style="border-radius: 16px;">
-      <div class="modal-header">
-        <h5 class="modal-title" id="studentLoginLabel">Student Login</h5>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: var(--shadow-lg);">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold" id="studentLoginLabel">🎓 Student Portal Login</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form method="post" action="">
+      <form method="post" action="{% url 'student_portal_login' %}">
         {% csrf_token %}
         <input type="hidden" name="role" value="student">
-        <div class="modal-body">
+        <div class="modal-body py-4">
           <div class="mb-3">
-            <label class="form-label">Student Name</label>
-            <input type="text" name="name" class="form-control" placeholder="Enter student name" required>
+            <label class="form-label fw-600">Full Name / Username</label>
+            <input type="text" name="name" class="form-control" style="border-radius: 10px; padding: 12px;"
+              placeholder="Enter your full name or username" required>
           </div>
           <div class="mb-3">
-            <label class="form-label">Roll No.</label>
-            <input type="text" name="code" class="form-control" placeholder="Enter roll number" required>
+            <label class="form-label fw-600">Roll Number / Student ID (Password)</label>
+            <input type="password" name="code" class="form-control" style="border-radius: 10px; padding: 12px;"
+              placeholder="Enter your roll number" required>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Login</button>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+            style="border-radius: 10px;">Cancel</button>
+          <button type="submit" class="btn btn-primary"
+            style="background: var(--clr-green); border: none; border-radius: 10px; padding: 10px 24px;">Login to
+            Portal</button>
         </div>
       </form>
     </div>
@@ -499,7 +530,7 @@
 <script>
   // Add click ripple effect
   document.querySelectorAll('.btn-panel').forEach(button => {
-    button.addEventListener('click', function(e) {
+    button.addEventListener('click', function (e) {
       const ripple = document.createElement('span');
       ripple.style.position = 'absolute';
       ripple.style.borderRadius = '50%';
@@ -510,58 +541,36 @@
       ripple.style.left = e.clientX - this.getBoundingClientRect().left + 'px';
       ripple.style.top = e.clientY - this.getBoundingClientRect().top + 'px';
       ripple.style.animation = 'ripple 0.6s ease-out';
-      
+
       this.appendChild(ripple);
-      
+
       setTimeout(() => ripple.remove(), 600);
     });
   });
 </script>
 
 <style>
-@keyframes ripple {
-  from {
-    opacity: 1;
-    transform: scale(0);
+  @keyframes ripple {
+    from {
+      opacity: 1;
+      transform: scale(0);
+    }
+
+    to {
+      opacity: 0;
+      transform: scale(4);
+    }
   }
-  to {
-    opacity: 0;
-    transform: scale(4);
+
+  .fw-600 {
+    font-weight: 600;
   }
-}
 
-
-.course-list { display:flex; flex-direction:column; gap:14px; }
-.course-item {
-  background: var(--clr-surface-alt);
-  border-radius: 16px;
-  padding: 16px 18px;
-  border: 1px solid rgba(0,0,0,.05);
-}
-.course-title { display:flex; flex-direction:column; gap:4px; }
-.course-name { font-size: 18px; font-weight: 700; color: var(--clr-text); }
-.course-meta { font-size: 13px; color: var(--clr-text-muted); }
-.course-body { padding-top: 6px; }
-.teacher-photo {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--clr-accent);
-  margin-bottom: 6px;
-}
-.teacher-card {
-  background: var(--clr-surface);
-  border-radius: 14px;
-  padding: 14px 16px;
-  border: 1px solid rgba(0,0,0,.06);
-}
-.teacher-name { font-weight: 600; color: var(--clr-text); margin-bottom: 2px; }
-
-
-
+  /* Premium details for modals */
+  .modal-backdrop.show {
+    opacity: 0.7;
+    backdrop-filter: blur(4px);
+  }
 </style>
 
 {% endblock %}
-
-

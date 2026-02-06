@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.db import IntegrityError
 from .models import Course, Grade
 from .forms import CourseForm
 from institution.models import Institution
@@ -48,11 +49,14 @@ def course_create(request):
     if request.method == 'POST':
         form = CourseForm(request.POST)
         if form.is_valid():
-            course = form.save(commit=False)
-            course.institution = institution
-            course.save()
-            form.save_m2m()
-            return redirect('course_list')
+            try:
+                course = form.save(commit=False)
+                course.institution = institution
+                course.save()
+                form.save_m2m()
+                return redirect('course_list')
+            except IntegrityError:
+                form.add_error('code', 'A course with this code already exists for your institution.')
     else:
         form = CourseForm()
 

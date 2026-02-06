@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Teacher
 from academics.models import Course
-from timetable.models import TimeSlot, Attendance
+
 from student.models import Student
 from institution.models import Institution
 from accounts.models import UserProfile
+from django.db import transaction, IntegrityError
 from .forms import TeacherCreateForm, TeacherEditForm
 
 
@@ -51,35 +53,14 @@ def teacher_dashboard(request):
         messages.error(request, 'Teacher not found.')
         return redirect('dashboard')
 
-@login_required(login_url='login')
-def teacher_timetable(request):
-    try:
-        teacher = Teacher.objects.get(user=request.user)
-        courses = Course.objects.filter(teacher=teacher)
-        timetable = TimeSlot.objects.filter(course__in=courses)
-        context = {'timetable': timetable, 'teacher': teacher}
-        return render(request, 'teacher/timetable.html', context)
-    except Teacher.DoesNotExist:
-        return render(request, 'teacher/timetable.html', {'error': 'Teacher profile not found'})
 
-@login_required(login_url='login')
-def teacher_attendance(request):
-    try:
-        teacher = Teacher.objects.get(user=request.user)
-        courses = Course.objects.filter(teacher=teacher)
-        attendance = Attendance.objects.filter(course__in=courses)
-        context = {'attendance': attendance, 'teacher': teacher, 'courses': courses}
-        return render(request, 'teacher/attendance.html', context)
-    except Teacher.DoesNotExist:
-        return render(request, 'teacher/attendance.html', {'error': 'Teacher profile not found'})
 
 @login_required(login_url='login')
 def teacher_students(request):
     try:
         teacher = Teacher.objects.get(user=request.user)
         courses = Course.objects.filter(teacher=teacher)
-        students = Student.objects.filter(user__id__in=
-            Attendance.objects.filter(course__in=courses).values_list('student__user__id', flat=True)).distinct()
+        students = Student.objects.filter(course__in=courses).distinct()
         context = {'students': students, 'teacher': teacher}
         return render(request, 'teacher/students.html', context)
     except Teacher.DoesNotExist:
@@ -105,42 +86,53 @@ def teacher_create(request):
     if request.method == 'POST':
         form = TeacherCreateForm(request.POST, request.FILES, institution=institution)
         if form.is_valid():
-            from django.contrib.auth.models import User
-            full_name = form.cleaned_data['name'].strip()
-            parts = full_name.split(None, 1)
-            first_name = parts[0] if parts else full_name
-            last_name = parts[1] if len(parts) > 1 else ""
-            employee_id = form.cleaned_data['employee_id']
-            username = _unique_username(f"teacher_{employee_id}")
-            password = employee_id
+            try:
+                with transaction.atomic():
 
-            user = User.objects.create_user(username=username, password=password)
-            user.first_name = first_name
-            user.last_name = last_name
-            user.save()
+                    full_name = form.cleaned_data['name'].strip()
+                    parts = full_name.split(None, 1)
+                    first_name = parts[0] if parts else full_name
+                    last_name = parts[1] if len(parts) > 1 else ""
+                    employee_id = form.cleaned_data['employee_id']
+                    username = _unique_username(f"teacher_{employee_id}")
+                    password = employee_id
 
-            teacher = Teacher.objects.create(
-                user=user,
-                institution=institution,
-                employee_id=employee_id,
-                department=form.cleaned_data['department'],
-                qualification=form.cleaned_data['qualification'],
-                photo=form.cleaned_data.get('photo'),
-            )
+                    user = User.objects.create_user(username=username, password=password)
+                    user.first_name = first_name
+                    user.last_name = last_name
+                    user.save()
 
-            courses = form.cleaned_data.get('courses')
-            if courses:
-                for course in courses:
-                    course.teachers.add(teacher)
+                    teacher = Teacher.objects.create(
+                        user=user,
+                        institution=institution,
+                        employee_id=employee_id,
+                        department=form.cleaned_data['department'],
+                        qualification=form.cleaned_data['qualification'],
+                        gender=form.cleaned_data['gender'],
+                        date_of_birth=form.cleaned_data.get('date_of_birth'),
+                        phone=form.cleaned_data.get('phone', ''),
+                        address=form.cleaned_data.get('address', ''),
+                        salary=form.cleaned_data.get('salary', 0.00),
+                        contract_type=form.cleaned_data['contract_type'],
+                        photo=form.cleaned_data.get('photo'),
+                    )
 
-            UserProfile.objects.create(
-                user=teacher.user,
-                role='teacher',
-                institution=institution.name
-            )
-            messages.success(request, 'Teacher added successfully.')
-            messages.success(request, 'Teacher updated successfully.')
-            return redirect('teacher_list')
+                    courses = form.cleaned_data.get('courses')
+                    if courses:
+                        for course in courses:
+                            course.teachers.add(teacher)
+
+                    UserProfile.objects.create(
+                        user=teacher.user,
+                        role='teacher',
+                        institution=institution.name
+                    )
+                messages.success(request, 'Teacher added successfully.')
+                return redirect('teacher_list')
+            except IntegrityError as e:
+                messages.error(request, f'Database error: One of the unique fields (like Employee ID) might already exist. ({e})')
+            except Exception as e:
+                messages.error(request, f'An unexpected error occurred: {e}')
     else:
         form = TeacherCreateForm(institution=institution)
 
@@ -167,6 +159,13 @@ def teacher_edit(request, teacher_id):
             teacher.employee_id = form.cleaned_data['employee_id']
             teacher.department = form.cleaned_data['department']
             teacher.qualification = form.cleaned_data['qualification']
+            teacher.gender = form.cleaned_data['gender']
+            teacher.date_of_birth = form.cleaned_data.get('date_of_birth')
+            teacher.phone = form.cleaned_data.get('phone', '')
+            teacher.address = form.cleaned_data.get('address', '')
+            teacher.salary = form.cleaned_data.get('salary', 0.00)
+            teacher.contract_type = form.cleaned_data['contract_type']
+
             if form.cleaned_data.get('photo'):
                 teacher.photo = form.cleaned_data.get('photo')
             teacher.save()

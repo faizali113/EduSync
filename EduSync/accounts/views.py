@@ -2,18 +2,34 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_http_methods
-from .models import UserProfile, LoginTable
+from django.views.decorators.cache import never_cache
+from .models import UserProfile, LoginTable, SignupTable
 from institution.models import Institution
+from django.contrib import messages
 
+@never_cache
 @require_http_methods(["GET", "POST"])
 def landing_view(request):
     return render(request, 'landing.html', {'force_public_nav': True})
 
 
+@never_cache
 @require_http_methods(["GET", "POST"])
 def login_view(request):
+    if request.user.is_authenticated:
+        try:
+            profile = UserProfile.objects.get(user=request.user)
+            if profile.role == 'institution_admin':
+                return redirect('dashboard')
+            elif profile.role == 'teacher':
+                return redirect('teacher_dashboard')
+            elif profile.role == 'student':
+                return redirect('student_dashboard')
+        except UserProfile.DoesNotExist:
+            return redirect('dashboard')
+
     if request.method == 'POST':
-        from .models import SignupTable
+
         institution_name = request.POST.get('institution_name')
         password = request.POST.get('password')
         
@@ -48,21 +64,26 @@ def login_view(request):
         # Role-based redirect with success message
         try:
             profile = UserProfile.objects.get(user=user)
+            messages.success(request, f"✅ Welcome back, {user.first_name}!")
             if profile.role == 'institution_admin':
-                return render(request, 'login.html', {'success': '✅ Login successfully! Redirecting to dashboard...', 'redirect': 'dashboard'})
+                return redirect('dashboard')
             elif profile.role == 'teacher':
-                return render(request, 'login.html', {'success': '✅ Login successfully! Redirecting to dashboard...', 'redirect': 'teacher_dashboard'})
+                return redirect('teacher_dashboard')
             elif profile.role == 'student':
-                return render(request, 'login.html', {'success': '✅ Login successfully! Redirecting to dashboard...', 'redirect': 'student_dashboard'})
+                return redirect('student_dashboard')
         except UserProfile.DoesNotExist:
             return redirect('landing')
     
     return render(request, 'login.html')
 
+@never_cache
 @require_http_methods(["GET", "POST"])
 def signup_view(request):
+    if request.user.is_authenticated:
+         return redirect('dashboard')
+
     if request.method == 'POST':
-        from .models import SignupTable
+
         institution_name = request.POST.get('institution')
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -109,7 +130,8 @@ def signup_view(request):
             login(request, user)
             
             # Render with success message and redirect
-            return render(request, 'signup.html', {'success': '✅ Sign up successfully! Redirecting to login...', 'redirect': 'login'})
+            messages.success(request, "✅ Account created successfully! Welcome to EduSync.")
+            return redirect('dashboard')
         except Exception as e:
             return render(request, 'signup.html', {'error': f'❌ Error creating account: {str(e)}'})
     

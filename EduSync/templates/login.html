@@ -3,240 +3,234 @@
 {% block content %}
 
 <style>
-  body {
-  min-height: 100vh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-/* 🌈 THEME AWARE BACKGROUND */
-.login-container {
-  background: linear-gradient(135deg, var(--clr-bg) 0%, var(--clr-surface-alt) 100%);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-}
-
-/* 🧊 CARD */
-.login-card {
-  background: var(--clr-surface);
-  border-radius: 24px;
-  padding: 50px 45px;
-  box-shadow: var(--shadow-md);
-  border: 1px solid rgba(0,0,0,.06);
-  max-width: 450px;
-  width: 100%;
-  backdrop-filter: blur(10px);
-}
-
-[data-bs-theme="dark"] .login-card {
-  border-color: rgba(255,255,255,.08);
-}
-
-@media (max-width: 576px) {
-  .login-card {
-    padding: 30px 25px;
-    margin: 0 15px;
+  .auth-wrapper {
+    min-height: 85vh;
+    /* Adjusted since nav is sticky */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem 1rem;
   }
-}
 
-.login-header {
-  text-align: center;
-  margin-bottom: 40px;
-}
+  /* Background Decor */
+  .auth-bg-blob {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: var(--clr-accent);
+    filter: blur(140px);
+    opacity: 0.15;
+    border-radius: 50%;
+    z-index: -1;
+  }
 
-/* ✍️ TEXT COLORS FROM THEME */
-.login-header h2 { color: var(--clr-text); font-size: 32px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.5px; }
-.login-header p { color: var(--clr-text-muted); font-size: 15px; }
+  .blob-l {
+    top: -100px;
+    left: -100px;
+    background: var(--clr-accent);
+  }
 
-.form-group { margin-bottom: 24px; }
+  .blob-r {
+    bottom: -100px;
+    right: -100px;
+    background: var(--clr-success);
+    opacity: 0.1;
+  }
 
-.form-label {
-  color: var(--clr-text-muted);
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 8px;
-  display: block;
-}
+  /* Glass Card */
+  .auth-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--clr-surface-alt);
+    padding: 3rem 2.5rem;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
 
-/* ⌨️ INPUTS */
-.form-control {
-  background: var(--clr-surface-alt);
-  border: 1px solid rgba(0,0,0,.08);
-  border-radius: 12px;
-  padding: 14px 18px;
-  color: var(--clr-text);
-  font-size: 15px;
-  transition: all 0.3s ease;
-  width: 100%;
-}
+  [data-bs-theme="dark"] .auth-card {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.05);
+  }
 
-[data-bs-theme="dark"] .form-control {
-  border-color: rgba(255,255,255,.1);
-}
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
 
-.form-control:focus {
-  border-color: var(--clr-accent);
-  box-shadow: 0 0 0 3px var(--clr-accent-soft);
-  outline: none;
-}
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
-.form-control::placeholder {
-  color: var(--clr-text-muted);
-}
+  .auth-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
 
-/* 🔴 BUTTON */
-.btn-primary {
-  background: var(--clr-accent);
-  border: none;
-  border-radius: 12px;
-  padding: 14px 28px;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 600;
-  width: 100%;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(232,83,63,.25);
-  margin-top: 10px;
-}
+  .auth-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+  }
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(232,83,63,.35);
-  background: var(--clr-accent-hover);
-}
+  .auth-sub {
+    font-size: 0.95rem;
+    color: var(--clr-text-muted);
+  }
 
-/* LINKS */
-.signup-link {
-  text-align: center;
-  margin-top: 30px;
-  color: var(--clr-text-muted);
-  font-size: 14px;
-}
+  /* Floating Inputs or Clean Inputs */
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
 
-.signup-link a {
-  color: var(--clr-accent);
-  text-decoration: none;
-  font-weight: 600;
-}
+  .form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--clr-text);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
 
-.signup-link a:hover {
-  color: var(--clr-accent-hover);
-  text-decoration: underline;
-}
+  .form-control {
+    background: var(--clr-bg);
+    border: 1px solid var(--clr-border);
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    width: 100%;
+    color: var(--clr-text);
+  }
 
-/* 🏷️ BADGE */
-.badge-tag {
-  display: inline-flex;
-  align-items: center;
-  background: var(--clr-accent-soft);
-  color: var(--clr-accent);
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 20px;
-}
+  .form-control:focus {
+    outline: none;
+    border-color: var(--clr-accent);
+    box-shadow: 0 0 0 4px var(--clr-accent-soft);
+    background: var(--clr-surface);
+  }
 
-.badge-tag::before {
-  content: "●";
-  margin-right: 6px;
-  font-size: 10px;
-}
+  .btn-auth {
+    width: 100%;
+    padding: 0.9rem;
+    background: var(--clr-accent);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s;
+    margin-top: 1rem;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+  }
 
-/* REMEMBER */
-.remember-forgot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  font-size: 14px;
-}
+  .btn-auth:hover {
+    background: var(--clr-accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+  }
 
-.remember-me {
-  display: flex;
-  align-items: center;
-  color: var(--clr-text-muted);
-}
+  .auth-footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: var(--clr-text-muted);
+  }
 
-/* ALERTS */
-.alert {
-  border-radius: 12px;
-  padding: 14px 18px;
-  margin-bottom: 24px;
-  border: none;
-  font-size: 14px;
-}
+  .auth-footer a {
+    color: var(--clr-accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
 
-.alert-danger {
-  background: rgba(220, 53, 69, 0.12);
-  color: #dc3545;
-  border-left: 3px solid #dc3545;
-}
+  .auth-footer a:hover {
+    text-decoration: underline;
+  }
 
-.alert-success {
-  background: rgba(40, 167, 69, 0.12);
-  color: #28a745;
-  border-left: 3px solid #28a745;
-}
+  .back-btn-wrapper {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+  }
 
+  .back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    color: var(--clr-text-muted);
+    transition: 0.2s;
+    text-decoration: none;
+  }
+
+  .back-btn:hover {
+    color: var(--clr-accent);
+    border-color: var(--clr-accent);
+  }
 </style>
 
-<div class="login-container" >
-  <div class="login-card">
-    <div class="login-header">
-      <div class="badge-tag">Academic Management, Reimagined</div>
-      <h2>Welcome Back</h2>
-      <p>Login to access your dashboard</p>
+<div class="auth-wrapper">
+  <div class="auth-bg-blob blob-l"></div>
+  <div class="auth-bg-blob blob-r"></div>
+
+  <div class="auth-card">
+    <!-- Back Button -->
+    <a href="/" class="back-btn" title="Back to Home">←</a>
+
+    <div class="auth-header">
+      <h1 class="auth-title">Welcome Back</h1>
+      <p class="auth-sub">Enter your credentials to access the dashboard.</p>
     </div>
 
     <form method="post">
       {% csrf_token %}
-      
+
       <div class="form-group">
         <label class="form-label">Institution Name</label>
-        <input type="text" name="institution_name" class="form-control" placeholder="Enter your institution name" required>
+        <input type="text" name="institution_name" class="form-control" placeholder="e.g. Harvard University" required>
       </div>
 
       <div class="form-group">
         <label class="form-label">Password</label>
-        <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+        <input type="password" name="password" class="form-control" placeholder="••••••••" required>
       </div>
 
-      <div class="remember-forgot">
-        <label class="remember-me">
-          <input type="checkbox" name="remember">
-          <span>Remember me</span>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <label class="d-flex align-items-center gap-2"
+          style="font-size: 0.85rem; color: var(--clr-text-muted); cursor: pointer;">
+          <input type="checkbox" name="remember" style="accent-color: var(--clr-accent);"> Remember me
         </label>
+        <a href="#"
+          style="font-size: 0.85rem; color: var(--clr-accent); text-decoration: none; font-weight: 500;">Forgot
+          Password?</a>
       </div>
 
-      <button type="submit" class="btn-primary">Login</button>
+      <button type="submit" class="btn-auth">Sign In</button>
     </form>
 
-    <div class="signup-link">
-      Don't have an account? <a href="{% url 'signup' %}">Sign up here</a>
+    <div class="auth-footer">
+      New to EduSync? <a href="{% url 'signup' %}">Create an account</a>
     </div>
-
-    
   </div>
 </div>
 
 <script src="{% static 'js/alerts.js' %}"></script>
 {% if error %}
-  <script>
-    showErrorAlert("{{ error }}");
-  </script>
-{% endif %}
-{% if success %}
-  <script>
-    showSuccessAlert("{{ success }}");
-    setTimeout(function() {
-      window.location.href = "{% url redirect %}";
-    }, 2000);
-  </script>
+<script>showErrorAlert("{{ error }}");</script>
 {% endif %}
 
 {% endblock %}
-
